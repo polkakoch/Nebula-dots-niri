@@ -1,0 +1,19 @@
+# Nebula theme: Ayu Mirage
+name="Ayu Mirage"
+mode=dark
+bg=#1f2430
+bg_alt=#191e2a
+surface=#272d38
+overlay=#343f4c
+fg=#cccac2
+fg_dim=#b3b1ad
+muted=#707a8c
+accent=#ffcc66
+accent2=#73d0ff
+red=#f28779
+green=#d5ff80
+yellow=#ffd173
+blue=#73d0ff
+magenta=#dfbfff
+cyan=#95e6cb
+orange=#ffad66

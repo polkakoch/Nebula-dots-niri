@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Nebula — power: lock | suspend | logout | reboot | shutdown | profile (next power mode)
+. "$(dirname "$(readlink -f "$0")")/../lib.sh"
+
+lock() {
+    pidof hyprlock >/dev/null && return
+    if has hyprlock; then hyprlock
+    elif has swaylock; then swaylock -f -c 000000
+    fi
+}
+
+case "$1" in
+    lock)     lock ;;
+    suspend)  lock & sleep 0.6; systemctl suspend ;;
+    logout)   niri msg action quit --skip-confirmation ;;
+    reboot)   systemctl reboot ;;
+    shutdown) systemctl poweroff ;;
+    profile)  # power saver → balanced → performance → and around again
+        has powerprofilesctl || exit 1
+        case "$(powerprofilesctl get)" in
+            power-saver) p=balanced; t=$(t "Баланс") ;;
+            balanced)    p=performance; t=$(t "Производительность") ;;
+            *)           p=power-saver; t=$(t "Экономия") ;;
+        esac
+        powerprofilesctl set "$p" 2>/dev/null || { p=balanced; t=$(t "Баланс"); powerprofilesctl set "$p"; }
+        nb_notify "$(t "Питание")" "$t" battery ;;
+    *) echo "usage: nb-power lock|suspend|logout|reboot|shutdown|profile"; exit 1 ;;
+esac

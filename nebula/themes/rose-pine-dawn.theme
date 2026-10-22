@@ -1,0 +1,19 @@
+# Nebula theme: Rosé Pine Dawn
+name="Rosé Pine Dawn"
+mode=light
+bg=#faf4ed
+bg_alt=#fffaf3
+surface=#f2e9e1
+overlay=#dfdad9
+fg=#575279
+fg_dim=#797593
+muted=#9893a5
+accent=#907aa9
+accent2=#d7827e
+red=#b4637a
+green=#286983
+yellow=#ea9d34
+blue=#286983
+magenta=#907aa9
+cyan=#56949f
+orange=#d7827e

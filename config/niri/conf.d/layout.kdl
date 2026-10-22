@@ -1,0 +1,70 @@
+// ── Window layout ───────────────────────────────────────────────────
+// Border colors are in colors.kdl (they change with the theme).
+// Gaps, outline, corner radius, inactive window opacity and "open maximized"
+// are set from the side panel and written to nebula-settings.kdl
+layout {
+    gaps 10
+    center-focused-column "never"
+    always-center-single-column
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+        proportion 1.0
+    }
+    default-column-width { proportion 0.5; }
+
+    preset-window-heights {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    // a soft shadow: wide and light, weaker on inactive windows
+    shadow {
+        on
+        softness 42
+        spread 0
+        offset x=0 y=14
+        color "#00000070"
+        inactive-color "#00000038"
+    }
+
+    tab-indicator {
+        width 4
+        gap 6
+        length total-proportion=0.6
+        position "left"
+        gaps-between-tabs 4
+        corner-radius 4
+    }
+
+    // waybar already reserves space for the bar
+    struts {
+        left 0
+        right 0
+        top 0
+        bottom 0
+    }
+}
+
+overview {
+    zoom 0.45
+}
+
+prefer-no-csd
+
+screenshot-path "~/Pictures/Screenshots/Screenshot %Y-%m-%d %H-%M-%S.png"
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+// Blur for translucent windows and panels (niri 26+)
+blur {
+    passes 3
+    offset 3.0
+    noise 0.02
+    saturation 1.4
+}

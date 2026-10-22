@@ -1,0 +1,19 @@
+# Nebula theme: Monokai Pro
+name="Monokai Pro"
+mode=dark
+bg=#2d2a2e
+bg_alt=#221f22
+surface=#403e41
+overlay=#5b595c
+fg=#fcfcfa
+fg_dim=#c1c0c0
+muted=#727072
+accent=#ffd866
+accent2=#ff6188
+red=#ff6188
+green=#a9dc76
+yellow=#ffd866
+blue=#78dce8
+magenta=#ab9df2
+cyan=#78dce8
+orange=#fc9867

@@ -1,0 +1,754 @@
+# Nebula — English interface strings.
+# Each line: the Russian string as it appears in the code<TAB>its English version.
+# \n stands for a line break. Keep {placeholders}, %s/%d and markup exactly as they are.
+# Adding a language means adding another file like this one (and a choice in the UI).
+
+ЛКМ — большой плеер · ПКМ — пауза · колесо — трек	Click — big player · Right-click — pause · Scroll — track
+Громкость: {pct}%\nЛКМ — пункт управления · СКМ — выкл. звук · ПКМ — микшер · колесо — громкость	Volume: {pct}%\nClick — Control Center · Middle-click — mute · Right-click — mixer · Scroll — volume
+Яркость: {pct}%\nЛКМ — пункт управления · колесо — яркость	Brightness: {pct}%\nClick — Control Center · Scroll — brightness
+выкл	off
+работает 	up 
+Из обоев	From wallpaper
+{0} мин	{0} min
+{0} д	{0} d
+{0} ч	{0} h
+Приложения	Apps
+Все приложения	All apps
+Настройки Дока…	Dock settings…
+Док	Dock
+Не скрывать Док	Keep the Dock visible
+Скрывать Док автоматически	Hide the Dock automatically
+Новое окно	New window
+Открыть	Open
+Убрать из Дока	Remove from Dock
+Оставить в Доке	Keep in Dock
+Закрыть окно	Close window
+Окно	Window
+Закрыть все окна ({0})	Close all windows ({0})
+Бесспорно	It is certain
+Предрешено	It is decidedly so
+Никаких сомнений	Without a doubt
+Определённо да	Yes, definitely
+Можешь быть уверен в этом	You may rely on it
+Мне кажется — да	As I see it, yes
+Вероятнее всего	Most likely
+Хорошие перспективы	Outlook good
+Знаки говорят — да	Signs point to yes
+Да	Yes
+Пока не ясно, попробуй снова	Reply hazy, try again
+Спроси позже	Ask again later
+Лучше не рассказывать	Better not tell you now
+Сейчас нельзя предсказать	Cannot predict now
+Сконцентрируйся и спроси опять	Concentrate and ask again
+Даже не думай	Don't count on it
+Мой ответ — нет	My reply is no
+По моим данным — нет	My sources say no
+Перспективы не очень	Outlook not so good
+Весьма сомнительно	Very doubtful
+Время вышло	Time's up
+Ничего не найдено	Nothing found
+Орёл	Heads
+Решка	Tails
+с	s
+Поиск приложений, настроек, 2+2, >команда	Search apps, settings, 2+2, >command
+<b>2+2</b> калькулятор   <b>~/</b> путь	<b>2+2</b> calculator   <b>~/</b> path
+Заблокировать экран	Lock screen
+Питание	Power
+Сон	Sleep
+Выйти из сеанса	Log out
+Перезагрузка	Restart
+Выключение	Shut down
+Случайные обои	Random wallpaper
+Обои	Wallpaper
+Пункт управления	Control Center
+Темы и цвета	Themes and colors
+История буфера	Clipboard history
+Wi-Fi, звук, яркость, настройки	Wi-Fi, sound, brightness, settings
+Не беспокоить	Do Not Disturb
+Уведомления вкл/выкл	Notifications on/off
+Скриншот области	Screenshot of an area
+С редактором	With the editor
+Звук и устройства	Sound and devices
+Масштаб экрана	Display scale
+Настройки	Settings
+Дата и время	Date and time
+Профиль и аватар	Profile and avatar
+Картинка fastfetch	fastfetch picture
+Окна и анимации	Windows and animations
+Строка меню	Menu bar
+Рабочий стол	Desktop
+Док, часы на обоях	Dock, desktop clock
+Управление	Input
+Мышь, тачпад, горячий угол, жесты	Mouse, touchpad, hot corner, gestures
+Первоначальная настройка	First-time setup
+Мастер: тема, обои, строка меню, клавиатура	Wizard: theme, wallpaper, menu bar, keyboard
+Дополнения	Extras
+Подбросить ещё — Enter	Flip again — Enter
+Шар предсказаний	Magic 8-ball
+↵ ещё раз	↵ again
+ч	h
+мин	min
+↵ запустить	↵ start
+Удиви меня	Surprise me
+Случайные обои и цветовая схема	Random wallpaper and color scheme
+Код принят. Вечеринка!	Code accepted. Party time!
+в доке	in Dock
+В терминале	In the terminal
+Claude: продолжить	Claude: continue
+Последний разговор	Last conversation
+Приложение	App
+Настройки Claude	Claude settings
+закреплено в доке	pinned to the Dock
+убрано из дока	removed from the Dock
+{0}d{1} · бросить ещё — Enter	{0}d{1} · roll again — Enter
+Скопировать	Copy
+Таймер на {0}	Timer for {0}
+{0} открыть   {1} в док   <b>&gt;</b> команда   	{0} open   {1} to Dock   <b>&gt;</b> command   
+Спросить Claude	Ask Claude
+Спросить Claude…	Ask Claude…
+Напишите вопрос после «?»	Type a question after “?”
+Выполнить команду	Run command
+↵ скопировать	↵ copy
+Выполнить в терминале ({0})	Run in terminal ({0})
+Искать «{0}» в интернете	Search the web for “{0}”
+Скопировать ссылку на трек	Copy track link
+Открыть плеер	Open player
+Перемешать	Shuffle
+Повтор	Repeat
+Сейчас ничего не играет	Nothing is playing
+Музыка	Music
+Ссылка скопирована	Link copied
+сейчас	now
+Закрыть	Close
+{n} мин	{n} min
+{n} ч	{n} h
+Загрузка завершена	Download complete
+Файл <b>nebula-1.0.0.zip</b> сохранён в «Загрузки»	<b>nebula-1.0.0.zip</b> was saved to Downloads
+Скинь потом ссылку на конфиг, хочу тоже такой	Send me the link to your config later, I want one too
+Батарея почти села	Battery almost empty
+Осталось 9% — подключите зарядку	9% left — plug in the charger
+Уведомление	Notification
+Показать в папке	Show in folder
+Логотип	Logo
+Рабочие столы	Workspaces
+Заголовок окна	Window title
+Плеер	Player
+Трей	Tray
+Громкость	Volume
+Яркость	Brightness
+Язык	Language
+Сеть	Network
+Батарея	Battery
+Процессор	CPU
+Память	Memory
+Часы	Clock
+Слева	Left
+В центре	Center
+Справа	Right
+Не показаны	Hidden
+Рамка	Frame
+Переходит в рамку экрана	Flows into the screen frame
+Плавающая	Floating
+Стекло с блюром	Glass with blur
+Классика	Classic
+Во всю ширину, с блюром	Full width, with blur
+Острова	Islands
+Слева, центр, справа	Left, center, right
+Таблетки	Pills
+Каждый модуль отдельно	Every module on its own
+Чёлка	Notch
+Центр свисает сверху	Center hangs from the top
+Минимал	Minimal
+Без фона	No background
+Только EN	EN only
+Прав. Alt	Right Alt
+Нет	Off
+Профиль	Profile
+Заблокировать	Lock
+Не засыпать	Keep awake
+Ночной свет	Night light
+Скриншот	Screenshot
+Область экрана	Screen area
+Устройства	Devices
+Очистить	Clear
+Все	All
+Уведомления	Notifications
+Показать пример	Show a sample
+Звук	Sound
+Выкл. звук	Mute
+Выкл. микрофон	Mute mic
+Оформление	Appearance
+Буфер обмена	Clipboard
+Экран	Display
+По умолчанию	Default
+Сбросить	Reset
+Самые запускаемые приложения	Most launched apps
+Сверху слева	Top left
+Сверху	Top
+Сверху справа	Top right
+По центру	Center
+Снизу слева	Bottom left
+Снизу	Bottom
+Снизу справа	Bottom right
+Изменить кадр	Adjust crop
+Темы и обои	Themes and wallpaper
+Картинка в терминале	Picture in the terminal
+Масштаб, ночной свет	Scale, night light
+Язык, формат, часовой пояс	Language, format, time zone
+Стиль, модули, плеер	Style, modules, player
+Док, часы	Dock, clock
+Прозрачность, скорость, экономия	Transparency, speed, battery saver
+Мышь, тачпад, жесты	Mouse, touchpad, gestures
+Приколы, Claude	Fun stuff, Claude
+Фото пользователя	User photo
+Включено	On
+Выключено	Off
+Случайная	Random
+Выбранная	Chosen
+Экономия	Power saver
+Угол выкл.	Corner off
+Выключены	Off
+Нет адаптера	No adapter
+Включён	On
+Выключен	Off
+Сколько показывать	How long to show them
+Наведите мышь — уведомление подождёт	Hover over a notification and it'll wait
+С какой стороны	Which side
+Поиск устройств… (8 с)	Looking for devices… (8 s)
+Поиск по имени или путь к папке	Search by name, or a path to a folder
+Enter — поставить первые найденные; вставьте путь к папке и нажмите Enter — сменить папку. Super+Shift+W — случайные.	Enter — use the first match; paste a folder path and press Enter — switch folders. Super+Shift+W — random.
+Поиск в истории	Search history
+Клик — скопировать снова, Enter — первое найденное. Хранится в cliphist.	Click — copy again, Enter — first match. Stored by cliphist.
+Удалить	Delete
+Блокировка	Lock
+Выйти	Log out
+Super+Esc — эта страница · Super+Shift+L — заблокировать сразу	Super+Esc — this page · Super+Shift+L — lock right away
+Совет: в Dolphin — ПКМ по картинке → «Nebula» → «Картинка для fastfetch». Или просто кладите файлы в папку. Super+Shift+A — следующая.	Tip: in Dolphin, right-click a picture → “Nebula” → “Picture for fastfetch”. Or just drop files into the folder. Super+Shift+A — next one.
+Толщина рамки	Frame thickness
+Окна не заходят под рамку; Super+F — поверх неё	Windows stay inside the frame; Super+F goes over it
+Убрать из строки меню	Remove from the menu bar
+По умолчанию (Inter Display)	Default (Inter Display)
+Рамка и стиль панели — в «Строка меню»	Frame and bar style — under “Menu bar”
+24-часовой формат — в «Дата и время»	24-hour clock — under “Date and time”
+Super+F — окно на весь экран поверх панели, повторно — обратно. Super+Shift+F — развернуть колонку.	Super+F — window fullscreen over the bar, again — back. Super+Shift+F — maximize the column.
+Тачпад	Touchpad
+Клавиатура	Keyboard
+Скачиваю официальный .deb и распаковываю в домашнюю папку… Можно закрыть панель — придёт уведомление.	Downloading the official .deb and unpacking it into your home folder… You can close the panel — a notification will tell you when it's done.
+Поиск: начните с «?» — «?как переименовать много файлов» откроет Claude с этим вопросом. Выключить дополнение целиком — Настройки → Дополнения.	Search: start with “?” — “?how do I rename lots of files” opens Claude with that question. To turn the add-on off entirely — Settings → Extras.
+Сохраняю…	Saving…
+Фото хранится в ~/.face: оно здесь, на экране блокировки и — если система поддерживает — на экране входа. В Dolphin: ПКМ по картинке → «Nebula» → «Фото профиля».	The photo lives in ~/.face: you'll see it here, on the lock screen and — if your system supports it — on the login screen. In Dolphin: right-click a picture → “Nebula” → “Profile photo”.
+Картинки	Pictures
+док прячется	Dock hides
+док виден	Dock visible
+без дока	no Dock
+Без анимаций	No animations
+Нет новых уведомлений	No new notifications
+3 с	3 s
+5 с	5 s
+8 с	8 s
+Всегда	Always
+Параметры сети…	Network settings…
+Подключение…	Connecting…
+Подключено	Connected
+Подключить	Connect
+Менеджер Bluetooth…	Bluetooth manager…
+Микшер громкости…	Volume mixer…
+Тема	Theme
+Сменить папку…	Change folder…
+История пуста	History is empty
+Картинка · 	Image · 
+cliphist не установлен	cliphist isn't installed
+Случайная в каждом терминале	A random one in every terminal
+Иначе — всегда выбранная	Otherwise always the chosen one
+Размер картинки	Picture size
+Картинка не выбрана	No picture chosen
+Тёплые цвета экрана	Warm screen colors
+Меньше синего света вечером	Less blue light in the evening
+Температура	Temperature
+Язык интерфейса	Interface language
+Оболочка и строка меню перезапустятся на новом языке	The shell and the menu bar will restart in the new language
+Часы в строке меню	Menu bar clock
+24-часовой формат	24-hour clock
+Показывать секунды	Show seconds
+День недели и дата	Day of the week and date
+Меняю часовой пояс… (может спросить пароль)	Changing the time zone… (may ask for a password)
+Время системы	System time
+Синхронизировать по сети	Sync over the network
+Точное время с серверов NTP	Accurate time from NTP servers
+Часовой пояс	Time zone
+Стиль	Style
+Размеры	Sizes
+Высота	Height
+Перетаскивай модули между зонами или нажми на модуль — появится меню. Изменения сразу видны в строке меню.	Drag modules between zones, or click one for a menu. Changes show up in the menu bar right away.
+Обложка в строке меню	Cover art in the menu bar
+Длина названия	Title length
+Клик по музыке в строке меню — большой плеер: обложка, фон из её цветов, перемотка, громкость плеера.	Click the music in the menu bar for the big player: cover art, a background in its colors, seeking, player volume.
+← Левее	← Further left
+Правее →	Further right →
+Выкл	Off
+Прятать	Auto-hide
+«Прятать» — выезжает, когда подводишь мышь к низу экрана или стол пустой.	“Auto-hide” — slides up when you move the mouse to the bottom of the screen, or when the desktop is empty.
+Перетащи значок в доке, чтобы поменять порядок, или вытащи вверх — открепится. ПКМ по значку — меню, в поиске — Ctrl+D.	Drag an icon in the Dock to reorder, or drag it up to unpin. Right-click an icon for a menu; in Search — Ctrl+D.
+Левее	Left
+Правее	Right
+Убрать из дока	Remove from Dock
+Белый	White
+Акцент	Accent
+Как тема	Like the theme
+Положение	Position
+Размер	Size
+Шрифт	Font
+Насыщенность	Weight
+Цвет	Color
+Часы на обоях	Desktop clock
+Показывать	Show
+Видны, когда стол пустой	Visible when the desktop is empty
+Окна	Windows
+Прозрачность неактивных	Inactive window opacity
+Активное окно всегда непрозрачное	The active window is always opaque
+Тонкая обводка	Thin outline
+Едва заметная рамка вокруг окон	A barely visible border around windows
+Скругление углов	Corner radius
+Отступы между окнами	Gaps between windows
+Открывать развёрнутыми	Open maximized
+Новые окна сразу на всю ширину	New windows take the full width right away
+Анимации	Animations
+Анимации niri	niri animations
+Открытие окон, столы, обзор	Opening windows, workspaces, overview
+Скорость	Speed
+Больше — быстрее	Higher is faster
+Производительность	Performance
+Режим экономии	Battery saver
+Без блюра под окнами и панелями, неактивные окна непрозрачные — меньше работы видеокарте, дольше батарея	No blur under windows and panels, inactive windows opaque — less work for the GPU, longer battery life
+Языки	Layouts
+Смена языка	Switching layouts
+С Caps Lock настоящий Caps — Shift+Caps	With Caps Lock, the real Caps is Shift+Caps
+Касание — клик	Tap to click
+Два пальца — правый клик, три — средний	Two fingers — right click, three — middle
+Естественная прокрутка	Natural scrolling
+Контент едет за пальцами, как на телефоне	Content follows your fingers, like on a phone
+Скорость указателя	Pointer speed
+Скорость прокрутки	Scroll speed
+Мышь	Mouse
+Без ускорения: одно движение — одно расстояние	No acceleration: the same move always goes the same distance
+Обратная прокрутка колесом	Reverse wheel scrolling
+Фокус за мышью	Focus follows mouse
+Окно под курсором становится активным без клика	The window under the cursor becomes active without a click
+Горячий угол	Hot corner
+Курсор в угол — обзор всех окон	Cursor into the corner — overview of all windows
+Шпаргалка	Cheat sheet
+Приложение с окном	App with a window
+Терминал	Terminal
+Обычный	Normal
+План	Plan
+Правки	Edits
+Авто	Auto
+Super+Shift+C открывает	Super+Shift+C opens
+Разрешения Claude Code	Claude Code permissions
+«Обычный» — подтверждать каждое действие, «План» — сначала только план, «Правки» — менять файлы без вопросов	“Normal” — confirm every action, “Plan” — a plan first, nothing else, “Edits” — change files without asking
+Продолжать прошлый разговор	Continue the last conversation
+Если в папке уже говорили с Claude	If you've already talked to Claude in that folder
+Меню в Dolphin	Dolphin menu
+ПКМ по папке или файлу → Claude	Right-click a folder or file → Claude
+Приколы	Fun stuff
+Пасхалки в поиске	Easter eggs in Search
+Приветствие при входе	Greeting at login
+«Доброе утро, …» и что сегодня за день	“Good morning, …” and what kind of day it is
+Новые обои при каждом входе	New wallpaper at every login
+Случайные из папки обоев	A random one from your wallpaper folder
+Включить	Turn on
+Claude Code в терминале и Claude Desktop: Super+Shift+C, «?вопрос» в поиске, меню в Dolphin. Выключено — следов Claude в системе нет	Claude Code in the terminal and Claude Desktop: Super+Shift+C, “?question” in Search, a Dolphin menu. Off — no trace of Claude anywhere in the system
+Начало	Getting started
+Мастер первоначальной настройки	First-time setup wizard
+Тема, обои, строка меню, клавиатура и приколы — по шагам, как при первом входе	Theme, wallpaper, menu bar, keyboard and fun stuff — step by step, like on first login
+Кадр	Crop
+Масштаб	Zoom
+Тяните фото, чтобы сдвинуть; колесо — приблизить	Drag the photo to move it; scroll to zoom
+Не удалось открыть картинку	Couldn't open the picture
+Фото обновлено	Photo updated
+Назад	Back
+Не подключено	Not connected
+Пока пусто	Nothing here yet
+Обновить	Refresh
+Поиск сетей…	Looking for networks…
+Wi-Fi адаптер не найден	No Wi-Fi adapter found
+Wi-Fi выключен	Wi-Fi is off
+Сети не найдены	No networks found
+Сохранена	Saved
+Пароль	Password
+Выход	Output
+Вход	Input
+Вкл. звук	Unmute
+Вкл. микрофон	Unmute mic
+Все обои…	All wallpapers…
+{0} · {1}×{2} · {3} Гц	{0} · {1}×{2} · {3} Hz
+Модули	Modules
+пусто — перетащи сюда	empty — drag here
+все модули на месте	every module is in place
+Закреплённые в доке	Pinned to the Dock
+3 пальца ← →	3 fingers ← →
+листать окна	scroll through windows
+3 пальца ↑ ↓	3 fingers ↑ ↓
+рабочие столы	workspaces
+4 пальца ↑	4 fingers ↑
+обзор всех окон	overview of all windows
+колесо на точках	scroll on the dots
+колесо на заголовке	scroll on the title
+соседние окна	neighbouring windows
+2× клик по заголовку	double-click the title
+развернуть окно	maximize window
+СКМ по заголовку	middle-click the title
+закрыть окно	close window
+колесо на логотипе	scroll on the logo
+листать обои	flip through wallpapers
+СКМ по логотипу	middle-click the logo
+случайные обои	random wallpaper
+клик по языку	click the language
+сменить раскладку	switch layout
+ПКМ по батарее	right-click the battery
+режим питания	power mode
+Super+Пробел	Super+Space
+поиск	search
+пункт управления	Control Center
+Super+колесо	Super+scroll
+все сочетания	all shortcuts
+Продолжить	Continue
+Не установлен: yay -S claude-code (AUR) или npm i -g @anthropic-ai/claude-code	Not installed: yay -S claude-code (AUR) or npm i -g @anthropic-ai/claude-code
+Поздороваться	Say hello
+Запустить	Start
+Сохранить	Save
+Отмена	Cancel
+Не удалось сохранить	Couldn't save
+Выбрать фото…	Choose a photo…
+Убрать	Remove
+Защищена	Secured
+Открытая	Open
+Отключение…	Disconnecting…
+Bluetooth-адаптер не найден	No Bluetooth adapter found
+Bluetooth выключен	Bluetooth is off
+Нет устройств — нажмите «Искать»	No devices — press “Search”
+Папка с обоями	Wallpaper folder
+В {0} нет картинок. Вставьте в поиск путь к другой папке и нажмите Enter	There are no pictures in {0}. Paste a path to another folder into the search and press Enter
+Готовлю превью для {0} обоев…	Making previews for {0} wallpapers…
+{0} стр.	{0} lines
+В {0} пока пусто — добавьте картинки	{0} is empty for now — add some pictures
+Масштаб интерфейса	Interface scale
+Точнее	Fine-tune
+Применяется сразу и запоминается в conf.d/outputs.kdl	Applies right away and is saved to conf.d/outputs.kdl
+{0} симв.	{0} chars
+Перенести: 	Move: 
+Добавить: 	Add: 
+Тонкий	Thin
+Лёгкий	Light
+Жирный	Bold
+Официально выпускается только в виде .deb. Здесь его можно импортировать: распаковать .deb в домашнюю папку (без root) или поставить пакет из AUR	Officially it only ships as a .deb. Here you can import it: unpack the .deb into your home folder (no root), or install the AUR package
+Масштаб {0}%	Scale {0}%
+Не удалось подключиться к {0}	Couldn't connect to {0}
+Искать	Search
+Сопряжено	Paired
+Новое	New
+Картинки для fastfetch	Pictures for fastfetch
+Версия {0}	Version {0}
+Установлен из AUR · {0}. Обновляется вместе с системой	Installed from AUR · {0}. Updates along with the system
+Импорт .deb	Import .deb
+Фото профиля	Profile photo
+Случайные	Random
+Следующая	Next
+Добавить…	Add…
+Папка	Folder
+Не получилось — нужен пароль администратора	That didn't work — it needs an administrator password
+Импортирован из официального .deb · {0}. Лежит в домашней папке, root не нужен	Imported from the official .deb · {0}. Lives in your home folder, no root needed
+Из AUR	From AUR
+Баланс	Balanced
+--why=Не засыпать	--why=Keep awake
+Пропустить	Skip
+Закрыть мастер — всё можно поменять позже (Super+A)	Close the wizard — you can change everything later (Super+A)
+Далее	Next
+Enter — дальше · Esc — пропустить	Enter — next · Esc — skip
+Это Nebula — рабочий стол на niri. Пара минут, и он станет вашим: тема, обои, строка меню и клавиатура. Всё применяется сразу, а потом меняется в пункте управления (Super+A).	This is Nebula — a desktop built on niri. Give it a couple of minutes and it'll feel like yours: theme, wallpaper, menu bar and keyboard. Everything applies right away, and you can change it later in the Control Center (Super+A).
+Выберите тему	Pick a theme
+Цвета сразу меняются везде: строка меню, окна, уведомления, терминал, экран блокировки. «Из обоев» подстраивается под картинку на рабочем столе.	Colors change everywhere at once: menu bar, windows, notifications, terminal, lock screen. “From wallpaper” follows whatever picture is on your desktop.
+В папке пока нет картинок — выберите другую или положите туда свои обои.	There are no pictures in that folder yet — pick another one or drop your wallpapers in there.
+Клик — поставить. Потом: Super+W — все обои, Super+Shift+W — случайные, колесо на логотипе в строке меню — листать.	Click to set it. Later: Super+W — all wallpapers, Super+Shift+W — random, scroll on the logo in the menu bar — flip through.
+Строка меню и рабочий стол	Menu bar and desktop
+Стиль строки меню, док внизу экрана и большие часы на обоях.	Menu bar style, the Dock at the bottom and a big clock on the wallpaper.
+Клавиатура и мышь	Keyboard and mouse
+Языки и как их переключать. С Caps Lock настоящий Caps — Shift+Caps.	Layouts and how to switch between them. With Caps Lock, the real Caps is Shift+Caps.
+Приколы и дополнения	Fun stuff and extras
+Необязательное — включайте, что нравится.	All optional — turn on whatever you like.
+Открыть пункт управления	Open the Control Center
+Super+Пробел — поиск	Super+Space — search
+Super+A — настройки	Super+A — settings
+Super+Shift+/ — все клавиши	Super+Shift+/ — all shortcuts
+Другая папка…	Another folder…
+Приложения внизу экрана	Apps at the bottom of the screen
+Часы на рабочем столе	Desktop clock
+Крупно, поверх обоев	Big, on top of the wallpaper
+Касание тачпада — клик	Tap to click
+Два пальца — правый клик	Two fingers — right click
+Контент едет за пальцами	Content follows your fingers
+«Доброе утро, …», день недели и совет	“Good morning, …”, the day of the week and a tip
+Claude Code и Claude Desktop: Super+Shift+C, «?вопрос» в поиске, меню в Dolphin. Выключено — следов Claude в системе нет	Claude Code and Claude Desktop: Super+Shift+C, “?question” in Search, a Dolphin menu. Off — no trace of Claude anywhere in the system
+поиск и калькулятор	search and calculator
+терминал	terminal
+обои	wallpaper
+темы	themes
+история буфера	clipboard history
+окно на весь экран	fullscreen window
+сменить язык	switch layout
+Всё готово	All set
+Главное под рукой. Остальное — в пункте управления.	The essentials are at hand. Everything else lives in the Control Center.
+Привет, {0}!	Hi, {0}!
+Папка: 	Folder: 
+Прячется	Auto-hide
+Всегда виден	Always visible
+Без дока	No Dock
+Шаг {0} из {1} · {2}	Step {0} of {1} · {2}
+Начать	Get started
+Поехали	Let's go
+%d из %d · ↑↓ листать	%d of %d · ↑↓ to scroll
+Пробел — отметить · a — всё · Enter — дальше	Space — tick · a — all · Enter — next
+22 темы	22 themes
+Запускайте от обычного пользователя, не от root (sudo спросится сам).	Run this as your normal user, not root (sudo will ask by itself).
+Не найдены папки nebula/ и config/ рядом с install.sh	Can't find the nebula/ and config/ folders next to install.sh
+Nebula уже стоит — обновлю, ваши настройки сохранятся.	Nebula is already installed — I'll update it and keep your settings.
+свои, стеклянные (mako — запасной)	our own, glassy (mako as a fallback)
+Блокировка и сон	Lock and sleep
+Терминал kitty	kitty terminal
+цвета темы, блюр	theme colors, blur
+fastfetch с картинкой	fastfetch with a picture
+при открытии терминала	when a terminal opens
+Скриншоты	Screenshots
+grim, slurp, редактор satty	grim, slurp, satty editor
+Цвета для Qt/KDE	Colors for Qt/KDE
+Dolphin и др. в цветах темы	Dolphin and friends in theme colors
+клик по CPU/памяти	click on CPU/memory
+Меню «Nebula» в Dolphin	“Nebula” menu in Dolphin
+ПКМ по картинке → обои, аватар	right-click a picture → wallpaper, avatar
+Русская локаль	Russian locale
+даты по-русски, нужен sudo	Russian dates, needs sudo
+Дополнение Claude	Claude add-on
+цвета подстраиваются под картинку	colors follow the picture
+панель переходит в рамку вокруг экрана	the bar flows into a frame around the screen
+стекло с блюром и отступами	glass with blur and margins
+во всю ширину, полупрозрачная	full width, translucent
+три группы: слева, центр, справа	three groups: left, center, right
+каждый модуль отдельно	every module on its own
+центр свисает из верхнего края	the center hangs from the top edge
+без фона	no background
+Только English	English only
+Свои…	Custom…
+например us,de или us,ru,by	e.g. us,de or us,ru,by
+Shift+Caps — настоящий Caps	Shift+Caps — the real Caps
+Правый Alt	Right Alt
+Как ставить?	How should we install?
+↑↓ — выбрать, Enter — дальше	↑↓ — choose, Enter — next
+Быстро	Quick
+всё по умолчанию, недостающие пакеты доустановятся сами	all defaults, missing packages get installed automatically
+Выборочно	Custom
+компоненты, тема, строка меню, клавиатура, приколы	components, theme, menu bar, keyboard, fun stuff
+Только конфиги	Configs only
+пакеты не трогать (уже всё стоит или не Arch)	leave packages alone (everything's already there, or this isn't Arch)
+Компоненты	Components
+Ядро — niri, строка меню, поиск, пункт управления — ставится всегда	The core — niri, menu bar, Search, Control Center — is always installed
+Потом меняется: Super+Shift+T	Change it later: Super+Shift+T
+Потом: пункт управления → Строка меню	Later: Control Center → Menu bar
+Языки клавиатуры	Keyboard layouts
+Раскладки через запятую: 	Layouts, comma-separated: 
+Если пусто — положу туда набор градиентных обоев	If it's empty, I'll put a set of gradient wallpapers there
+«Доброе утро, …» и совет дня	“Good morning, …” and a tip of the day
+случайные из папки	random ones from the folder
+Мастер настройки при первом входе?	Setup wizard on first login?
+Тема, обои, строка меню, клавиатура — по шагам, уже в niri	Theme, wallpaper, menu bar, keyboard — step by step, right inside niri
+Показать	Show it
+рекомендую для новой установки	recommended for a fresh install
+Не нужно	No thanks
+Будет сделано:	What's going to happen:
+недостающие пакеты (pacman; из AUR — через yay/paru)	missing packages (pacman; AUR ones via yay/paru)
+копия текущих конфигов	a backup of your current configs
+только цвета	colors only
+язык	language
+тема	theme
+строка меню	menu bar
+раскладки	layouts
+переключение	switch
+дополнение Claude	Claude add-on
+мастер настройки при первом входе	setup wizard on first login
+Установить	Install
+AUR-помощник yay	AUR helper yay
+yay установлен	yay installed
+не удалось собрать yay	couldn't build yay
+Пакеты	Packages
+это не Arch (нет pacman) — поставьте пакеты сами:	this isn't Arch (no pacman) — install the packages yourself:
+уже установлено: %d из %d	already installed: %d of %d
+Из репозиториев:	From the repos:
+установлено: %d	installed: %d
+pacman завершился с ошибкой — продолжаю, но что-то может не работать	pacman exited with an error — carrying on, but something might not work
+Из AUR:	From AUR:
+AUR-помощника нет. Поставить yay?	No AUR helper. Install yay?
+из AUR: %d	from AUR: %d
+%s завершился с ошибкой	%s exited with an error
+без AUR-помощника не поставить:	can't install without an AUR helper:
+всё нужное уже есть	everything needed is already there
+Локаль ru_RU.UTF-8 (даты на русском)	ru_RU.UTF-8 locale (Russian dates)
+локаль сгенерирована	locale generated
+не удалось сгенерировать локаль	couldn't generate the locale
+ru_RU.UTF-8 нет в /etc/locale.gen — пропускаю	ru_RU.UTF-8 isn't in /etc/locale.gen — skipping
+Резервная копия	Backup
+Скрипты и темы	Scripts and themes
+settings.conf сохранён	settings.conf kept
+команды nb-* доступны в ~/.local/bin	nb-* commands are available in ~/.local/bin
+Конфиги программ	App configs
+мониторы перенесены из текущей сессии	monitors carried over from the current session
+kitty (подключены цвета темы)	kitty (theme colors hooked up)
+fastfetch (картинки — в ~/Pictures/Fastfetch)	fastfetch (pictures go in ~/Pictures/Fastfetch)
+меню Dolphin «Nebula» (ПКМ по картинке)	Dolphin “Nebula” menu (right-click a picture)
+смена языка	layout switch
+пасхалки	easter eggs
+приветствие	greeting
+новые обои при входе	new wallpaper at login
+уведомления Nebula	Nebula notifications
+nebula-settings для niri и waybar	nebula-settings for niri and waybar
+подписи в конфигах — на выбранном языке	captions in configs — in the chosen language
+русской локали нет — дата на панели будет на английском	no Russian locale — the bar date will be in English
+в %s нет картинок — создаю набор градиентных обоев	no pictures in %s — making a set of gradient wallpapers
+создано: %d в %s	created: %d in %s
+текущие обои:	current wallpaper:
+превью для меню готовятся в фоне	menu previews are being made in the background
+Из обоев (цвета подстраиваются под картинку)	From wallpaper (colors follow the picture)
+конфиг niri валиден	niri config is valid
+niri validate нашёл ошибку:	niri validate found an error:
+Применяю в текущей сессии	Applying to the current session
+строка меню, поиск, пункт управления, уведомления и обои перезапущены	menu bar, Search, Control Center, notifications and wallpaper restarted
+Nebula %s установлена	Nebula %s installed
+Super+Пробел — поиск · Super+A — пункт управления	Super+Space — search · Super+A — Control Center
+niri сейчас не запущен — всё подхватится при следующем входе в сессию niri	niri isn't running right now — everything will pick up at your next niri login
+Готово! Nebula %s	Done! Nebula %s
+Пробел	Space
+Поиск: приложения, калькулятор, команды, настройки	Search: apps, calculator, commands, settings
+пункт управления: Wi-Fi, звук, яркость, темы, настройки	Control Center: Wi-Fi, sound, brightness, themes, settings
+терминал (kitty)	terminal (kitty)
+окно на весь экран и обратно	window fullscreen and back
+обои · Super + Shift + W — случайные	wallpaper · Super + Shift + W — random
+питание	power
+все горячие клавиши	all shortcuts
+Мастер настройки ещё раз: Поиск → «Первоначальная настройка» или nb-shell welcome	Setup wizard again: Search → “First-time setup”, or nb-shell welcome
+Настройки: пункт управления → Настройки (или ~/.config/nebula/settings.conf)	Settings: Control Center → Settings (or ~/.config/nebula/settings.conf)
+Откат:     ./uninstall.sh  (вернёт %s)	Undo:      ./uninstall.sh  (brings back %s)
+Claude Code не установлен: yay -S claude-code (AUR) или npm i -g @anthropic-ai/claude-code	Claude Code isn't installed: yay -S claude-code (AUR) or npm i -g @anthropic-ai/claude-code
+Не установлен: пункт управления → Настройки → Claude	Not installed: Control Center → Settings → Claude
+Не удалось получить список версий	Couldn't get the list of versions
+Скачиваю версию %s (≈190 МБ)…	Downloading version %s (≈190 MB)…
+Загрузка не удалась	Download failed
+Контрольная сумма не совпала — файл удалён	Checksum mismatch — the file was deleted
+Не удалось распаковать .deb	Couldn't unpack the .deb
+Готово: версия %s. Ищите «Claude» в поиске	Done: version %s. Look for “Claude” in Search
+Новый чат	New chat
+Новая сессия Claude Code	New Claude Code session
+Импортированная версия удалена	Imported version removed
+Нет yay или paru — используйте импорт .deb	No yay or paru — use the .deb import
+Claude Desktop из AUR (claude-desktop) — понадобится пароль	Claude Desktop from AUR (claude-desktop) — it'll need your password
+Enter — закрыть	Enter — close
+Открыть Claude Code здесь	Open Claude Code here
+Продолжить прошлый разговор	Continue the last conversation
+Объяснить, что в этой папке	Explain what's in this folder
+Коротко объясни, что это за проект или папка: что здесь лежит, как устроено, с чего начать.	Briefly explain what this project or folder is: what's in it, how it's put together, where to start.
+Приложение Claude	Claude app
+Спросить Claude про файл	Ask Claude about this file
+Посмотри файл %s в этой папке и коротко расскажи, что в нём.	Look at the file %s in this folder and briefly tell me what's in it.
+Посмотри файлы %s в этой папке и коротко расскажи, что в них и как они связаны.	Look at the files %s in this folder and briefly tell me what's in them and how they fit together.
+В %s нет картинок — добавьте их туда	There are no pictures in %s — add some there
+Без картинки	No picture
+Доброй ночи	Good night
+Доброе утро	Good morning
+Добрый день	Good afternoon
+Добрый вечер	Good evening
+Пятница! Осталось чуть-чуть	Friday! Almost there
+Выходной — можно никуда не спешить	Day off — no need to rush anywhere
+Завтра Новый год 🎄	New Year's tomorrow 🎄
+С Новым годом! 🎆	Happy New Year! 🎆
+Пора бы и поспать 🌙	Might be time for some sleep 🌙
+Super+Пробел — и всё под рукой	Super+Space — and everything's at hand
+Совет: Super+Shift+W — случайные обои	Tip: Super+Shift+W — random wallpaper
+Совет: в поиске «2+2» сразу считает	Tip: type “2+2” in Search and it just answers
+Совет: Super+A — пункт управления	Tip: Super+A — Control Center
+Совет: Super+V — история буфера обмена	Tip: Super+V — clipboard history
+Совет: наведите мышь на уведомление — оно подождёт	Tip: hover over a notification and it'll wait for you
+Хорошего дня ✨	Have a nice day ✨
+Сегодня отличный день, чтобы что-нибудь доделать	A great day to finally finish something
+Помни про воду и осанку	Remember water and posture
+Пункт управления (Super+A)	Control Center (Super+A)
+Не беспокоить: включено · ПКМ — выключить	Do Not Disturb: on · Right-click — turn off
+Уведомлений	Notifications
+ПКМ — не беспокоить · СКМ — убрать все	Right-click — Do Not Disturb · Middle-click — clear all
+Уведомления скрыты	Notifications are hidden
+Выключено — уведомления снова видны	Off — notifications are visible again
+Проверка	Test
+Уведомления работают	Notifications work
+Claude: продолжить разговор	Claude: continue the conversation
+Скопирован и сохранён	Copied and saved
+Тема не найдена	Theme not found
+Тема применена	Theme applied
+awww не установлен — обои недоступны	awww isn't installed — wallpapers aren't available
+Файл не найден: %s	File not found: %s
+В %s нет картинок	No pictures in %s
+Пароль для $USER	Password for $USER
+Неверный пароль	Wrong password
+Поиск: приложения, калькулятор, команды	Search: apps, calculator, commands
+Пункт управления (боковая панель)	Control Center (side panel)
+Следующие обои	Next wallpaper
+Предыдущие обои	Previous wallpaper
+Темы	Themes
+Картинка fastfetch: следующая	fastfetch picture: next
+Файлы	Files
+Браузер	Browser
+Диспетчер задач (btop)	Task manager (btop)
+Убрать все уведомления	Clear all notifications
+Не беспокоить: вкл/выкл	Do Not Disturb: on/off
+Вернуть последнее уведомление	Bring back the last notification
+Скриншот экрана	Screenshot of the screen
+Скриншот окна	Screenshot of a window
+Скриншот с редактором (satty)	Screenshot with the editor (satty)
+Обзор: все окна (Super+Tab)	Overview: all windows (Super+Tab)
+Окно на весь экран (и обратно)	Window fullscreen (and back)
+Развернуть колонку (под панелью)	Maximize column (below the bar)
+Развернуть до краёв (без отступов)	Maximize to the edges (no gaps)
+Отключить перехват клавиш приложением	Stop the app from grabbing keys
+Картинка для fastfetch	Picture for fastfetch
+Поставить обоями	Set as wallpaper
+Поиск (Super+Пробел)\nПКМ — пункт управления (Super+A)\nСКМ — случайные обои\nКолесо — листать обои	Search (Super+Space)\nRight-click — Control Center (Super+A)\nMiddle-click — random wallpaper\nScroll — flip through wallpapers
+{used:0.1f} из {total:0.1f} ГБ	{used:0.1f} of {total:0.1f} GB
+{long} · Caps Lock или клик — сменить язык	{long} · Caps Lock or click — switch layout
+Нет сети	No network
+{timeTo}\nМощность: {power:.1f} Вт\nПКМ — сменить режим питания	{timeTo}\nPower draw: {power:.1f} W\nRight-click — change power mode
+󰣇  система	󰣇  system
+󰌽  ядро	󰌽  kernel
+󰆍  терминал	󰆍  terminal
+󰻠  процессор	󰻠  cpu
+󰢮  видео	󰢮  gpu
+󰍛  память	󰍛  memory
+󰋊  диск	󰋊  disk
+󰅐  аптайм	󰅐  uptime
+󰏖  пакеты	󰏖  packages
+да	yes
+нет	no
+светлая	light
+Надёжный пароль · Enter — скопировать	Strong password · Enter — copy
+Помидор готов 🍅	Pomodoro done 🍅
+25 минут фокуса позади — пора размяться	25 minutes of focus behind you — time to stretch
+Фокус на 25 минут	Focus for 25 minutes
+Помидор: «Не беспокоить» включится, а потом сам выключится	Pomodoro: Do Not Disturb turns on, then off again by itself
+Погода	Weather
+Ответ придёт уведомлением (wttr.in)	The answer arrives as a notification (wttr.in)
+↵ узнать	↵ check
+Погода здесь	Weather here
+Погода · {0}	Weather · {0}
+wttr.in не ответил	wttr.in didn't answer
+Таймер · {0}	Timer · {0}
+Тихий «дзынь» при новом уведомлении	A quiet ding for new notifications
+«пароль», «помидор», «погода», «#ff8800», «монетка», «2d6», «шар …», «таймер 5 мин», каомодзи, «удиви меня» и один код из девяностых	“password”, “pomodoro”, “weather”, “#ff8800”, “coin”, “2d6”, “8ball …”, “timer 5 min”, kaomoji, “surprise me” and one code from the nineties
+пароль, помидор, погода, монетка, кубик, таймер, Konami	password, pomodoro, weather, coin, dice, timer, Konami
+Ответ на главный вопрос жизни, вселенной и всего такого	The answer to life, the universe and everything
+Не сегодня 🙂	Not today 🙂
+Привет-привет 👋	Hey there 👋
+Всегда пожалуйста ✨	Any time ✨

@@ -1,0 +1,19 @@
+# Nebula theme: Catppuccin Latte
+name="Catppuccin Latte"
+mode=light
+bg=#eff1f5
+bg_alt=#e6e9ef
+surface=#ccd0da
+overlay=#bcc0cc
+fg=#4c4f69
+fg_dim=#5c5f77
+muted=#8c8fa1
+accent=#8839ef
+accent2=#1e66f5
+red=#d20f39
+green=#40a02b
+yellow=#df8e1d
+blue=#1e66f5
+magenta=#ea76cb
+cyan=#179299
+orange=#fe640b

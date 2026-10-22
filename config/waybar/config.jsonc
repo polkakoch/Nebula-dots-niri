@@ -1,0 +1,193 @@
+// ┌───────────────────────────────────────────────┐
+// │  Nebula · waybar — the menu bar                │
+// │  Colors: colors.css (nb-theme)                 │
+// │  Height, margins, clock format:                │
+// │  nebula-settings.jsonc (nb-settings,          │
+// │  side panel → Settings)                        │
+// └───────────────────────────────────────────────┘
+// height/margin-*/modules-*/clock.format and custom/media are deliberately
+// not set here: with include, the main file's values win, and the settings
+// from the panel would never take effect.
+{
+    "include": ["~/.config/waybar/nebula-settings.jsonc"],
+    "layer": "top",
+    "position": "top",
+    "spacing": 2,
+    "reload_style_on_change": true,
+
+    // Which modules go where (modules-left/center/right), height and style live in nebula-settings.jsonc:
+    // Control Center → Settings → Menu bar (you can drag modules around there)
+
+    // ── left ────────────────────────────────────────────────
+    "custom/logo": {
+        "format": "󰣇",
+        "tooltip-format": "Поиск (Super+Пробел)\nПКМ — пункт управления (Super+A)\nСКМ — случайные обои\nКолесо — листать обои",
+        "on-click": "~/.config/nebula/bin/nb-shell launcher apps",
+        "on-click-right": "~/.config/nebula/bin/nb-shell panel",
+        "on-click-middle": "~/.config/nebula/bin/nb-wall random",
+        "on-scroll-up": "~/.config/nebula/bin/nb-wall prev",
+        "on-scroll-down": "~/.config/nebula/bin/nb-wall next",
+        "smooth-scrolling-threshold": 6
+    },
+
+    "niri/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "active": "",
+            "default": ""
+        },
+        // scroll — next/previous workspace
+        "on-scroll-up": "niri msg action focus-workspace-up",
+        "on-scroll-down": "niri msg action focus-workspace-down",
+        "smooth-scrolling-threshold": 2
+    },
+
+    "niri/window": {
+        "format": "{title}",
+        "icon": true,
+        "icon-size": 15,
+        "max-length": 56,
+        "separate-outputs": true,
+        "rewrite": {
+            "(.*) — Mozilla Firefox": "$1",
+            "(.*) - Visual Studio Code": "$1"
+        },
+        // title bar: double-click — maximize; middle-click — close; scroll — neighbouring windows
+        "on-double-click": "niri msg action maximize-column",
+        "on-click-middle": "niri msg action close-window",
+        "on-scroll-up": "niri msg action focus-column-left",
+        "on-scroll-down": "niri msg action focus-column-right",
+        "smooth-scrolling-threshold": 2
+    },
+
+    // ── center: the player (custom/media is in nebula-settings.jsonc; only shows up with music) ──
+    // the cover is the module's CSS background (nb-media writes nebula-cover.css), next to "title · artist"
+
+    // ── right ───────────────────────────────────────────────
+    "tray": {
+        "icon-size": 15,
+        "spacing": 8,
+        "show-passive-items": true
+    },
+
+    // Volume and brightness pills grow by themselves on any change (nb-pill)
+    "custom/volume": {
+        "exec": "~/.config/nebula/bin/nb-pill volume",
+        "return-type": "json",
+        "restart-interval": 2,
+        "escape": false,
+        "align": 0,
+        "on-click": "~/.config/nebula/bin/nb-shell panel",
+        "on-click-middle": "~/.config/nebula/bin/nb-osd volume mute",
+        "on-click-right": "pavucontrol",
+        "on-scroll-up": "~/.config/nebula/bin/nb-osd volume up",
+        "on-scroll-down": "~/.config/nebula/bin/nb-osd volume down"
+    },
+    "custom/brightness": {
+        "exec": "~/.config/nebula/bin/nb-pill brightness",
+        "return-type": "json",
+        "restart-interval": 2,
+        "escape": false,
+        "align": 0,
+        "on-click": "~/.config/nebula/bin/nb-shell panel",
+        "on-scroll-up": "~/.config/nebula/bin/nb-osd brightness up",
+        "on-scroll-down": "~/.config/nebula/bin/nb-osd brightness down"
+    },
+
+    "bluetooth": {
+        "format": "󰂯",
+        "format-disabled": "󰂲",
+        "format-off": "󰂲",
+        "format-connected": "󰂱",
+        "format-connected-battery": "󰂱 {device_battery_percentage}%",
+        "tooltip-format": "{controller_alias}",
+        "tooltip-format-connected": "{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}",
+        "on-click": "~/.config/nebula/bin/nb-shell panel bluetooth"
+    },
+
+    "cpu": {
+        "format": "󰻠 {usage}%",
+        "interval": 3,
+        "on-click": "kitty -e btop"
+    },
+    "memory": {
+        "format": "󰍛 {percentage}%",
+        "interval": 5,
+        "tooltip-format": "{used:0.1f} из {total:0.1f} ГБ",
+        "on-click": "kitty -e btop"
+    },
+
+    "custom/power": {
+        "format": "󰐥",
+        "tooltip-format": "Питание",
+        "on-click": "~/.config/nebula/bin/nb-shell panel power"
+    },
+
+    "niri/language": {
+        "format": "{short}",
+        "tooltip-format": "{long} · Caps Lock или клик — сменить язык",
+        "on-click": "niri msg action switch-layout next"
+    },
+
+    "network": {
+        "format-wifi": "{icon}",
+        "format-ethernet": "󰈀",
+        "format-linked": "󰈀",
+        "format-disconnected": "󰖪",
+        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+        "tooltip-format-wifi": "{essid} · {signalStrength}%\n{ipaddr}\n {bandwidthDownBytes}   {bandwidthUpBytes}",
+        "tooltip-format-ethernet": "{ifname} · {ipaddr}\n {bandwidthDownBytes}   {bandwidthUpBytes}",
+        "tooltip-format-disconnected": "Нет сети",
+        "interval": 5,
+        "on-click": "~/.config/nebula/bin/nb-shell panel wifi"
+    },
+
+    "battery": {
+        "interval": 30,
+        "states": {
+            "warning": 25,
+            "critical": 12
+        },
+        "format": "{capacity}%  <span size='120%'>{icon}</span>",
+        "format-charging": "{capacity}%  <span size='120%'>󰂄</span>",
+        "format-plugged": "{capacity}%  <span size='120%'>󰚥</span>",
+        "format-full": "{capacity}%  <span size='120%'>󰁹</span>",
+        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "tooltip-format": "{timeTo}\nМощность: {power:.1f} Вт\nПКМ — сменить режим питания",
+        "on-click": "~/.config/nebula/bin/nb-shell panel",
+        "on-click-right": "~/.config/nebula/bin/nb-power profile"
+    },
+
+    // Control Center: the icon turns into a moon in Do Not Disturb
+    "custom/control": {
+        "exec": "~/.config/nebula/bin/nb-notif status",
+        "return-type": "json",
+        "interval": 30,
+        "signal": 8,
+        "on-click": "~/.config/nebula/bin/nb-shell panel",
+        "on-click-right": "~/.config/nebula/bin/nb-notif dnd",
+        "on-click-middle": "~/.config/nebula/bin/nb-notif clear"
+    },
+
+    "clock": {
+        "locale": "ru_RU.UTF-8",   // commented out for English, or when the locale is missing
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode": "month",
+            "weeks-pos": "",
+            "on-scroll": 1,
+            "format": {
+                "months": "<span><b>{}</b></span>",
+                "weekdays": "<span alpha='60%'><b>{}</b></span>",
+                "today": "<span><b><u>{}</u></b></span>"
+            }
+        },
+        "on-click": "~/.config/nebula/bin/nb-shell panel",
+        "actions": {
+            "on-click-right": "mode",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
+    }
+}

@@ -1,0 +1,22 @@
+[Desktop Entry]
+Type=Service
+MimeType=image/png;image/jpeg;image/webp;image/gif;image/bmp;image/avif;
+Actions=fetch;wall;face;
+X-KDE-Submenu=Nebula
+X-KDE-Priority=TopLevel
+Icon=preferences-desktop-theme
+
+[Desktop Action fetch]
+Name=Картинка для fastfetch
+Icon=utilities-terminal
+Exec=@HOME@/.config/nebula/bin/nb-fetch add %F
+
+[Desktop Action wall]
+Name=Поставить обоями
+Icon=preferences-desktop-wallpaper
+Exec=@HOME@/.config/nebula/bin/nb-wall set %f
+
+[Desktop Action face]
+Name=Фото профиля
+Icon=user-identity
+Exec=@HOME@/.config/nebula/bin/nb-avatar set %f

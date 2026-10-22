@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Kept for compatibility: the old rofi menu is now the search (nb-shell launcher)
+#   nb-menu [apps|walls|themes|clip|power]
+exec "$(dirname "$(readlink -f "$0")")/nb-shell" launcher "${1:-apps}"

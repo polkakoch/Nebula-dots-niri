@@ -1,0 +1,97 @@
+// ── Window rules ────────────────────────────────────────────────────
+
+// Corner radius, inactive window opacity and "open maximized" are in
+// nebula-settings.kdl (side panel → Windows)
+
+// Terminals are translucent, with blur behind them
+window-rule {
+    match app-id=r#"^(kitty|Alacritty|foot|org\.wezfurlong\.wezterm|com\.mitchellh\.ghostty)$"#
+    background-effect {
+        blur true
+    }
+}
+
+// Floating windows: dialogs, settings, small utilities
+window-rule {
+    match app-id=r#"^(pavucontrol|org\.pulseaudio\.pavucontrol|blueman-manager|nm-connection-editor|qalculate-gtk|io\.github\.Qalculate\.qalculate-qt|org\.gnome\.Calculator|nebula-float|xdg-desktop-portal-gtk|org\.kde\.polkit-kde-authentication-agent-1|polkit-gnome-authentication-agent-1|com\.gabm\.satty|imv|org\.gnome\.Loupe)$"#
+    open-floating true
+}
+window-rule {
+    match title=r#"^(Open File|Open Folder|Save As|Сохранить как|Открыть файл|Выбор файла|File Upload|Choose Files|Picture-in-Picture|Картинка в картинке)$"#
+    open-floating true
+}
+window-rule {
+    match app-id="nebula-float"
+    default-column-width { fixed 900; }
+    default-window-height { fixed 560; }
+}
+
+// Picture-in-picture goes to the bottom right corner
+window-rule {
+    match title=r#"^(Picture-in-Picture|Картинка в картинке)$"#
+    default-floating-position x=24 y=24 relative-to="bottom-right"
+}
+
+// Browsers and editors start out wider
+window-rule {
+    match app-id=r#"^(firefox|zen|chromium|google-chrome|brave-browser|code|code-oss|dev\.zed\.Zed|org\.kde\.kate)$"#
+    default-column-width { proportion 0.66667; }
+}
+
+// Windows asking for attention get highlighted (urgent-color in colors.kdl)
+// Password managers never show up in screen recordings
+window-rule {
+    match app-id=r#"^(org\.keepassxc\.KeePassXC|1password|Bitwarden)$"#
+    block-out-from "screencast"
+}
+
+// ── Layer rules (bar, menus, notifications) ─────────────────────────
+
+// Wallpaper: a blurred copy lives behind the overview (Super+O)
+layer-rule {
+    match namespace=r#"^awww-daemonbackdrop$"#
+    place-within-backdrop true
+}
+
+// nb-shell: Search, Control Center, the player, the Dock and the frame draw their own
+// shapes in the solid panel color and grow out of the frame, so they need no blur or shadow
+// from niri (there are no rules for them on purpose: layers get neither by default)
+
+// Menu bar: blurred when it's glass (no frame); with the frame it's switched off in nebula-settings.kdl
+layer-rule {
+    match namespace="^waybar$"
+    background-effect {
+        blur true
+    }
+}
+
+// Notifications: nb-shell gives every card its own window, exactly the card's size,
+// so the blur and shadow follow each card instead of covering the whole stack
+layer-rule {
+    match namespace="^notifications$"
+    geometry-corner-radius 16
+    background-effect {
+        blur true
+    }
+    shadow {
+        on
+        softness 30
+        spread 0
+        offset x=0 y=8
+        color "#00000060"
+    }
+}
+
+// First-time setup wizard: the whole screen behind it is blurred
+layer-rule {
+    match namespace="^nebula-welcome$"
+    background-effect {
+        blur true
+    }
+}
+
+// Menus and notifications stay out of screen recordings
+layer-rule {
+    match namespace="^(nebula-launcher|nebula-panel|notifications)$"
+    block-out-from "screencast"
+}

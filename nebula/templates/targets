@@ -1,0 +1,8 @@
+# template          destination (relative to ~/.config)
+waybar.css          waybar/colors.css
+mako.conf           mako/config
+niri.kdl            niri/colors.kdl
+kitty.conf          kitty/nebula-theme.conf
+hyprlock.conf       hypr/nebula-colors.conf
+kdeglobals.colors   nebula/cache/kdeglobals.colors
+fastfetch.jsonc     fastfetch/config.jsonc

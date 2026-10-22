@@ -1,0 +1,19 @@
+# Nebula theme: Palenight
+name="Palenight"
+mode=dark
+bg=#292d3e
+bg_alt=#232635
+surface=#34324a
+overlay=#444267
+fg=#a6accd
+fg_dim=#959dcb
+muted=#676e95
+accent=#c792ea
+accent2=#82aaff
+red=#f07178
+green=#c3e88d
+yellow=#ffcb6b
+blue=#82aaff
+magenta=#c792ea
+cyan=#89ddff
+orange=#f78c6c

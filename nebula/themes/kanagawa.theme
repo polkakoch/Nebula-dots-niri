@@ -1,0 +1,19 @@
+# Nebula theme: Kanagawa
+name="Kanagawa"
+mode=dark
+bg=#1f1f28
+bg_alt=#16161d
+surface=#2a2a37
+overlay=#363646
+fg=#dcd7ba
+fg_dim=#c8c093
+muted=#727169
+accent=#7e9cd8
+accent2=#957fb8
+red=#e46876
+green=#98bb6c
+yellow=#e6c384
+blue=#7e9cd8
+magenta=#957fb8
+cyan=#7fb4ca
+orange=#ffa066

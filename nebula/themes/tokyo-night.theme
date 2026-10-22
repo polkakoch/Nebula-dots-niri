@@ -1,0 +1,19 @@
+# Nebula theme: Tokyo Night
+name="Tokyo Night"
+mode=dark
+bg=#1a1b26
+bg_alt=#16161e
+surface=#292e42
+overlay=#3b4261
+fg=#c0caf5
+fg_dim=#a9b1d6
+muted=#565f89
+accent=#7aa2f7
+accent2=#bb9af7
+red=#f7768e
+green=#9ece6a
+yellow=#e0af68
+blue=#7aa2f7
+magenta=#bb9af7
+cyan=#7dcfff
+orange=#ff9e64

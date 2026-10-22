@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# Nebula — the fastfetch picture, made easy to change as often as you like
+#   nb-fetch                  same as show
+#   nb-fetch show             run fastfetch (in random mode — a new picture every time)
+#   nb-fetch set <file>       pick a picture (any file, not just from the folder)
+#   nb-fetch add <files…>     copy into the picture folder and pick the first one
+#   nb-fetch next | prev | random
+#   nb-fetch none             no picture (the distro logo)
+#   nb-fetch list             pictures in the folder
+#   nb-fetch apply            rebuild config.jsonc (after a size or theme change)
+#
+# The folder is FETCH_DIR (~/Pictures/Fastfetch by default) — just drop files in there.
+# In Dolphin: right-click a picture → Nebula → "Picture for fastfetch".
+. "$(dirname "$(readlink -f "$0")")/../lib.sh"
+
+FDIR="$NB_CACHE/fetch"           # ready-made copies (square, rounded corners)
+LOGO="$FDIR/logo.png"            # the chosen one — config.jsonc points here
+SEL="$NB_STATE/fetch-image"      # the original file behind the chosen picture
+mkdir -p "$FDIR" "$FETCH_DIR" 2>/dev/null
+
+list() {
+    find -L "$FETCH_DIR" -maxdepth 2 -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \
+        -o -iname '*.webp' -o -iname '*.gif' -o -iname '*.bmp' -o -iname '*.avif' \) 2>/dev/null | sort -V
+}
+
+# A ready copy: a centered 512px square with rounded corners (cached by path and mtime)
+prepared() { # <file> → path to a png
+    local src="$1" key out
+    key=$(printf '%s|%s' "$src" "$(stat -c %Y "$src" 2>/dev/null)" | md5sum | cut -c1-16)
+    out="$FDIR/$key.png"
+    if [ ! -s "$out" ]; then
+        magick "${src}[0]" -auto-orient -thumbnail '512x512^' -gravity center -extent 512x512 \
+            \( -size 512x512 xc:none -fill white -draw 'roundrectangle 0,0 511,511 64,64' \) \
+            -alpha set -compose DstIn -composite -strip "$out.tmp.png" 2>/dev/null && mv -f "$out.tmp.png" "$out"
+    fi
+    [ -s "$out" ] && echo "$out"
+}
+
+# nb-theme builds config.jsonc from a template (theme colors + picture + size)
+apply() { "$NB_DIR/bin/nb-theme" render fastfetch.jsonc; }
+
+set_img() { # <file> [--quiet]
+    local f p
+    f=$(readlink -f "$1")
+    [ -f "$f" ] || { tf "Нет файла: %s\n" "$1" >&2; return 1; }
+    p=$(prepared "$f") || { nb_notify "Fastfetch" "$(t "Не удалось открыть картинку")" dialog-error; return 1; }
+    local had=0; [ -s "$LOGO" ] && had=1
+    cp -f "$p" "$LOGO.tmp" && mv -f "$LOGO.tmp" "$LOGO"
+    echo "$f" > "$SEL"
+    [ "$had" = 1 ] || apply      # the first picture — the config grows a logo section
+    [ "$2" = --quiet ] || nb_notify "Fastfetch" "$(basename "$f")" "$LOGO"
+}
+
+step() { # +1 | -1 | random
+    local cur list n i idx pick
+    cur=$(cat "$SEL" 2>/dev/null)
+    mapfile -t list < <(list)
+    n=${#list[@]}
+    [ "$n" -eq 0 ] && { nb_notify "Fastfetch" "$(tf "В %s нет картинок — добавьте их туда" "${FETCH_DIR/#$HOME/~}")" dialog-information; return 1; }
+    if [ "$1" = random ]; then
+        pick=${list[$((RANDOM % n))]}
+        [ "$n" -gt 1 ] && while [ "$pick" = "$cur" ]; do pick=${list[$((RANDOM % n))]}; done
+    else
+        idx=-1
+        for i in "${!list[@]}"; do [ "${list[$i]}" = "$cur" ] && idx=$i && break; done
+        pick=${list[$(( (idx + $1 + n) % n ))]}
+    fi
+    set_img "$pick"
+}
+
+show() {
+    local args=()
+    case "$TERM" in
+        xterm-kitty|xterm-ghostty|wezterm) ;;
+        *) [ -n "$KITTY_WINDOW_ID" ] || args+=(--logo-type auto) ;;   # a terminal without kitty graphics
+    esac
+    if [ "$FETCH_MODE" = random ]; then
+        local pick
+        pick=$(list | shuf -n 1)
+        [ -n "$pick" ] && pick=$(prepared "$pick") && args+=(--logo "$pick")
+    fi
+    exec fastfetch "${args[@]}"
+}
+
+case "${1:-show}" in
+    show)   show ;;
+    set)    set_img "$2" ;;
+    add)
+        shift; first=""
+        for f in "$@"; do
+            [ -f "$f" ] || continue
+            dst="$FETCH_DIR/$(basename "$f")"
+            [ "$(readlink -f "$f")" = "$(readlink -f "$dst")" ] || cp -n "$f" "$dst"
+            [ -z "$first" ] && first=$dst
+        done
+        [ -n "$first" ] && set_img "$first" ;;
+    next)   step 1 ;;
+    prev)   step -1 ;;
+    random) step random ;;
+    none)   rm -f "$LOGO" "$SEL"; apply; nb_notify "Fastfetch" "$(t "Без картинки")" utilities-terminal ;;
+    list)   list ;;
+    apply)  apply ;;
+    *) sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac

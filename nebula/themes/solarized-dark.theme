@@ -1,0 +1,19 @@
+# Nebula theme: Solarized Dark
+name="Solarized Dark"
+mode=dark
+bg=#002b36
+bg_alt=#00212b
+surface=#073642
+overlay=#124a57
+fg=#93a1a1
+fg_dim=#839496
+muted=#586e75
+accent=#268bd2
+accent2=#2aa198
+red=#dc322f
+green=#859900
+yellow=#b58900
+blue=#268bd2
+magenta=#d33682
+cyan=#2aa198
+orange=#cb4b16

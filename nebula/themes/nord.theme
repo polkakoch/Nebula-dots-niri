@@ -1,0 +1,19 @@
+# Nebula theme: Nord
+name="Nord"
+mode=dark
+bg=#2e3440
+bg_alt=#272c36
+surface=#3b4252
+overlay=#434c5e
+fg=#eceff4
+fg_dim=#d8dee9
+muted=#616e88
+accent=#88c0d0
+accent2=#81a1c1
+red=#bf616a
+green=#a3be8c
+yellow=#ebcb8b
+blue=#81a1c1
+magenta=#b48ead
+cyan=#8fbcbb
+orange=#d08770

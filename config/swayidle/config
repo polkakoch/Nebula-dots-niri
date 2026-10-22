@@ -1,0 +1,11 @@
+# Nebula · swayidle
+# Format: timeout <seconds> <command> [resume <command>]
+#
+# The screen doesn't dim, lock or sleep on its own — there are no timers.
+# To bring them back, uncomment the lines you want:
+# timeout 600  'brightnessctl -s set 30%-' resume 'brightnessctl -r'
+# timeout 900  'pidof hyprlock || hyprlock'
+# timeout 1200 'niri msg action power-off-monitors'
+
+# before sleep (only the manual kind: Super+Esc → "Sleep") — lock first
+before-sleep 'pidof hyprlock || hyprlock'

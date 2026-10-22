@@ -1,0 +1,279 @@
+#!/usr/bin/env bash
+# Nebula — Claude: Claude Code in a terminal and the Claude Desktop app
+#   nb-claude here [dir]              Claude Code in a terminal, in that folder (home by default)
+#   nb-claude continue [dir]          pick up the last conversation in that folder
+#   nb-claude ask "<question>" [dir]  a terminal with Claude and the question already asked
+#   nb-claude file <file>…            ask about files (Claude opens in their folder)
+#   nb-claude open                    Super+Shift+C: Claude Desktop or the terminal, as set in settings
+#   nb-claude desktop [link]          start Claude Desktop (claude://… — open that link in it)
+#   nb-claude install aur|deb         get Claude Desktop: the AUR package (yay/paru, asks for a password)
+#                                     or import the official .deb into your home folder, no root
+#   nb-claude remove                  remove the imported .deb
+#   nb-claude status                  what's installed (for the Control Center)
+#   nb-claude servicemenu             rebuild the "Claude" menu in Dolphin from the settings
+#
+# The whole add-on is optional: CLAUDE=1 turns it on (installer or Control Center → Extras)
+. "$(dirname "$(readlink -f "$0")")/../lib.sh"
+
+REPO="https://downloads.claude.ai/claude-desktop/apt/stable"
+APPS="${XDG_DATA_HOME:-$HOME/.local/share}"
+DEST="$APPS/nebula/apps/claude-desktop"      # where the .deb gets unpacked
+WRAP="$HOME/.local/bin/claude-desktop"
+ENTRY="$APPS/applications/com.anthropic.Claude.desktop"
+SM="$APPS/kio/servicemenus/nebula-claude.desktop"
+
+# ── Claude Code in a terminal ────────────────────────────────────────
+code_args() { # the flags that come from settings
+    case "$CLAUDE_MODE" in
+        plan|acceptEdits|auto) printf '%s\n' --permission-mode "$CLAUDE_MODE" ;;
+    esac
+}
+
+in_term() { # in_term <dir> <title> <command…>
+    local dir=$1 title=$2; shift 2
+    if ! has claude; then
+        nb_notify "Claude" "$(t "Claude Code не установлен: yay -S claude-code (AUR) или npm i -g @anthropic-ai/claude-code")" dialog-warning
+        exit 1
+    fi
+    case "$TERMINAL" in
+        kitty) setsid -f kitty --directory "$dir" --title "$title" "$@" ;;
+        *)     (cd "$dir" && setsid -f "$TERMINAL" -e "$@") ;;
+    esac >/dev/null 2>&1
+}
+
+pick_dir() { # a folder from the argument: a file → its folder, nothing → home
+    local d=${1:-$HOME}
+    [ -f "$d" ] && d=$(dirname "$d")
+    [ -d "$d" ] || d=$HOME
+    readlink -f "$d"
+}
+
+has_sessions() { # has Claude Code been used in this folder before (~/.claude/projects/<path with ->)
+    local d="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects/$(printf '%s' "$1" | sed 's/[^A-Za-z0-9]/-/g')"
+    compgen -G "$d/*.jsonl" >/dev/null
+}
+
+code_here() { # code_here <dir> [--continue] [question]
+    local dir=$1 cont=$2 prompt=$3 args
+    mapfile -t args < <(code_args)
+    # nothing to continue — just start fresh (otherwise claude bails out with an error)
+    [ "$cont" = --continue ] && has_sessions "$dir" && args+=(--continue)
+    [ -n "$prompt" ] && args+=("$prompt")
+    in_term "$dir" "Claude · ${dir/#$HOME/~}" claude "${args[@]}"
+}
+
+# ── Claude Desktop ───────────────────────────────────────────────────
+desktop_bin() { # what to launch: the AUR package beats the imported .deb
+    if [ -x /usr/bin/claude-desktop ]; then echo /usr/bin/claude-desktop
+    elif [ -x "$DEST/usr/lib/claude-desktop/claude-desktop" ]; then echo "$WRAP"
+    fi
+}
+
+desktop_run() {
+    local bin; bin=$(desktop_bin)
+    if [ -z "$bin" ]; then
+        nb_notify "Claude Desktop" "$(t "Не установлен: пункт управления → Настройки → Claude")" dialog-information
+        "$NB_DIR/bin/nb-shell" panel claude 2>/dev/null
+        return 1
+    fi
+    setsid -f "$bin" "$@" >/dev/null 2>&1
+}
+
+deb_arch() {
+    case "$(uname -m)" in
+        x86_64) echo amd64 ;; aarch64) echo arm64 ;;
+        *) echo "Claude Desktop is only built for x86_64 and aarch64" >&2; return 1 ;;
+    esac
+}
+
+# the newest version in the official apt repo: "version file sha256"
+deb_latest() {
+    local arch; arch=$(deb_arch) || return 1
+    curl -fsSL "$REPO/dists/stable/main/binary-$arch/Packages" | awk '
+        /^Package:/  { p = $2 }  /^Version:/ { v = $2 }
+        /^Filename:/ { f = $2 }  /^SHA256:/  { s = $2 }
+        /^$/ { if (p == "claude-desktop" && f) print v, f, s; p = v = f = s = "" }
+        END  { if (p == "claude-desktop" && f) print v, f, s }' | sort -V | tail -1
+}
+
+deb_import() {
+    local latest ver file sum deb tmp
+    has curl && has bsdtar || { echo "This needs curl and bsdtar (libarchive)" >&2; return 1; }
+    latest=$(deb_latest)
+    [ -n "$latest" ] || { nb_notify "Claude Desktop" "$(t "Не удалось получить список версий")" dialog-error; return 1; }
+    read -r ver file sum <<<"$latest"
+    if [ "$(cat "$DEST/VERSION" 2>/dev/null)" = "$ver" ]; then
+        echo "Claude Desktop $ver is already imported"
+        install_entry
+        return 0
+    fi
+    deb="$NB_CACHE/claude-desktop_${ver}.deb"
+    if [ "$(sha256sum "$deb" 2>/dev/null | cut -d' ' -f1)" != "$sum" ]; then
+        nb_notify "Claude Desktop" "$(tf "Скачиваю версию %s (≈190 МБ)…" "$ver")" claude-desktop
+        echo "→ $REPO/$file"
+        curl -fL --progress-bar -o "$deb.part" "$REPO/$file" && mv -f "$deb.part" "$deb" || {
+            rm -f "$deb.part"; nb_notify "Claude Desktop" "$(t "Загрузка не удалась")" dialog-error; return 1; }
+    fi
+    if [ "$(sha256sum "$deb" | cut -d' ' -f1)" != "$sum" ]; then
+        rm -f "$deb"; nb_notify "Claude Desktop" "$(t "Контрольная сумма не совпала — файл удалён")" dialog-error
+        return 1
+    fi
+    # a .deb is an ar archive; all we need is data.tar.* (package scripts and AppArmor bits aren't)
+    tmp="$DEST.new"
+    rm -rf "$tmp"; mkdir -p "$tmp"
+    bsdtar -xOf "$deb" 'data.tar.*' | bsdtar -xf - -C "$tmp" ./usr || {
+        rm -rf "$tmp"; nb_notify "Claude Desktop" "$(t "Не удалось распаковать .deb")" dialog-error; return 1; }
+    echo "$ver" > "$tmp/VERSION"
+    rm -rf "$DEST.old"; [ -d "$DEST" ] && mv "$DEST" "$DEST.old"
+    mv "$tmp" "$DEST" && rm -rf "$DEST.old"
+    rm -f "$deb"
+    install_entry
+    nb_notify "Claude Desktop" "$(tf "Готово: версия %s. Ищите «Claude» в поиске" "$ver")" claude-desktop
+}
+
+# a wrapper (native Wayland instead of blurry XWayland) + a launcher that handles claude:// (needed to sign in)
+install_entry() {
+    [ -x "$DEST/usr/lib/claude-desktop/claude-desktop" ] || return 0
+    mkdir -p "$(dirname "$WRAP")" "$(dirname "$ENTRY")"
+    cat > "$WRAP" <<EOF
+#!/usr/bin/env bash
+# Nebula: Claude Desktop imported from the official .deb (nb-claude install deb)
+flags=()
+[ -n "\${WAYLAND_DISPLAY:-}" ] && flags=(--ozone-platform=wayland --enable-features=WaylandWindowDecorations)
+conf="\${XDG_CONFIG_HOME:-\$HOME/.config}/claude-desktop-flags.conf"
+[ -r "\$conf" ] && flags+=(\$(sed 's/#.*//' "\$conf"))
+exec "$DEST/usr/lib/claude-desktop/claude-desktop" "\${flags[@]}" "\$@"
+EOF
+    chmod +x "$WRAP"
+    # without a setuid-root chrome-sandbox, Chromium sandboxes with user namespaces (on in Arch)
+    chmod 755 "$DEST/usr/lib/claude-desktop/chrome-sandbox" 2>/dev/null
+    # icons go into the user's hicolor theme, where both the launcher and Dolphin's menu find them
+    local f
+    for f in "$DEST"/usr/share/icons/hicolor/*/apps/claude-desktop.png; do
+        install -Dm644 "$f" "$APPS/icons/${f#"$DEST"/usr/share/icons/}"
+    done
+    sed -e "s|^Exec=claude-desktop|Exec=$WRAP|" \
+        -e "s|^Name=New Chat|Name=$(t "Новый чат")|" -e "s|^Name=New Claude Code Session|Name=$(t "Новая сессия Claude Code")|" \
+        "$DEST/usr/share/applications/com.anthropic.Claude.desktop" > "$ENTRY"
+    has update-desktop-database && update-desktop-database "$(dirname "$ENTRY")" 2>/dev/null
+    has xdg-mime && xdg-mime default com.anthropic.Claude.desktop x-scheme-handler/claude 2>/dev/null
+    return 0
+}
+
+deb_remove() {
+    [ -x /usr/bin/claude-desktop ] || rm -f "$APPS"/icons/hicolor/*/apps/claude-desktop.png
+    rm -rf "$DEST" "$DEST.new" "$DEST.old"
+    [ -f "$WRAP" ] && grep -q "nb-claude" "$WRAP" && rm -f "$WRAP"
+    [ -f "$ENTRY" ] && grep -q "$DEST" "$ENTRY" && rm -f "$ENTRY"
+    has update-desktop-database && update-desktop-database "$(dirname "$ENTRY")" 2>/dev/null
+    nb_notify "Claude Desktop" "$(t "Импортированная версия удалена")" claude-desktop
+}
+
+aur_install() {
+    local helper
+    for helper in yay paru; do has "$helper" && break; helper=""; done
+    if [ -z "$helper" ]; then
+        nb_notify "Claude Desktop" "$(t "Нет yay или paru — используйте импорт .deb")" dialog-warning
+        return 1
+    fi
+    setsid -f "${TERMINAL:-kitty}" -e sh -c "echo '$(t "Claude Desktop из AUR (claude-desktop) — понадобится пароль")'; echo;
+        $helper -S --needed claude-desktop; echo; printf '$(t "Enter — закрыть") '; read _" >/dev/null 2>&1
+}
+
+status() { # KEY=value lines for the Control Center
+    local v=""
+    echo "code=$(claude --version 2>/dev/null | head -1 | cut -d' ' -f1)"
+    if [ -x /usr/bin/claude-desktop ]; then
+        v=$(pacman -Q claude-desktop 2>/dev/null | cut -d' ' -f2)
+        echo "desktop=aur"; echo "desktop_ver=${v:-?}"
+    elif [ -x "$DEST/usr/lib/claude-desktop/claude-desktop" ]; then
+        echo "desktop=deb"; echo "desktop_ver=$(cat "$DEST/VERSION" 2>/dev/null)"
+    else
+        echo "desktop="
+    fi
+    has yay || has paru && echo "aur=1" || echo "aur=0"
+}
+
+# ── Dolphin menu ─────────────────────────────────────────────────────
+servicemenu() {
+    # only when the add-on is on (CLAUDE=1) and so is its "Dolphin menu" option
+    if [ "${CLAUDE:-0}" != 1 ] || [ "${CLAUDE_DOLPHIN:-1}" != 1 ]; then
+        rm -f "$SM" "${SM%.desktop}-files.desktop"; return 0
+    fi
+    mkdir -p "$(dirname "$SM")"
+    local b="$NB_DIR/bin/nb-claude" desk=""
+    [ -n "$(desktop_bin)" ] && desk=";desktop"
+    cat > "$SM" <<EOF
+[Desktop Entry]
+Type=Service
+MimeType=inode/directory;
+Actions=here;continue;explain$desk;
+X-KDE-Submenu=Claude
+X-KDE-Priority=TopLevel
+Icon=$( [ -n "$desk" ] && echo claude-desktop || echo utilities-terminal )
+
+[Desktop Action here]
+Name=$(t "Открыть Claude Code здесь")
+Icon=utilities-terminal
+Exec=$b here %f
+
+[Desktop Action continue]
+Name=$(t "Продолжить прошлый разговор")
+Icon=view-history
+Exec=$b continue %f
+
+[Desktop Action explain]
+Name=$(t "Объяснить, что в этой папке")
+Icon=help-about
+Exec=$b ask "$(t "Коротко объясни, что это за проект или папка: что здесь лежит, как устроено, с чего начать.")" %f
+EOF
+    [ -n "$desk" ] && cat >> "$SM" <<EOF
+
+[Desktop Action desktop]
+Name=$(t "Приложение Claude")
+Icon=claude-desktop
+Exec=$b desktop
+EOF
+    # and one for single files
+    cat > "${SM%.desktop}-files.desktop" <<EOF
+[Desktop Entry]
+Type=Service
+MimeType=all/allfiles;
+Actions=ask;
+X-KDE-Priority=TopLevel
+Icon=utilities-terminal
+
+[Desktop Action ask]
+Name=$(t "Спросить Claude про файл")
+Icon=utilities-terminal
+Exec=$b file %F
+EOF
+    chmod +x "$SM" "${SM%.desktop}-files.desktop"
+}
+
+case "$1" in
+    here)     code_here "$(pick_dir "$2")" "$([ "${CLAUDE_CONTINUE:-0}" = 1 ] && echo --continue)" ;;
+    continue) code_here "$(pick_dir "$2")" --continue ;;
+    ask)      [ -n "$2" ] || exit 1; code_here "$(pick_dir "$3")" "" "$2" ;;
+    file)
+        shift; [ $# -gt 0 ] || exit 1
+        dir=$(pick_dir "$1"); names=""
+        for f in "$@"; do names="$names${names:+, }«$(basename "$f")»"; done
+        if [ $# -eq 1 ]; then q=$(tf "Посмотри файл %s в этой папке и коротко расскажи, что в нём." "$names")
+        else q=$(tf "Посмотри файлы %s в этой папке и коротко расскажи, что в них и как они связаны." "$names"); fi
+        code_here "$dir" "" "$q" ;;
+    open)
+        if [ "$CLAUDE_OPEN" = desktop ] && [ -n "$(desktop_bin)" ]; then desktop_run
+        else code_here "$(pick_dir "$2")" "$([ "${CLAUDE_CONTINUE:-0}" = 1 ] && echo --continue)"; fi ;;
+    desktop)  shift; desktop_run "$@" ;;
+    install)
+        case "$2" in
+            aur) aur_install ;;
+            deb) deb_import && servicemenu ;;
+            *)   if has yay || has paru; then aur_install; else deb_import && servicemenu; fi ;;
+        esac ;;
+    remove)   deb_remove; servicemenu ;;
+    status)   status ;;
+    servicemenu) servicemenu ;;
+    *) sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac

@@ -1,0 +1,19 @@
+# Nebula theme: Synthwave '84
+name="Synthwave '84"
+mode=dark
+bg=#262335
+bg_alt=#1b1726
+surface=#34294f
+overlay=#463465
+fg=#f0eff1
+fg_dim=#d4d1e0
+muted=#848bbd
+accent=#ff7edb
+accent2=#36f9f6
+red=#fe4450
+green=#72f1b8
+yellow=#fede5d
+blue=#03edf9
+magenta=#ff7edb
+cyan=#36f9f6
+orange=#f97e72

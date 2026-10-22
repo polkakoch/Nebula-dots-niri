@@ -1,0 +1,19 @@
+# Nebula theme: One Dark
+name="One Dark"
+mode=dark
+bg=#282c34
+bg_alt=#21252b
+surface=#2c313a
+overlay=#3e4451
+fg=#abb2bf
+fg_dim=#9da5b4
+muted=#5c6370
+accent=#61afef
+accent2=#c678dd
+red=#e06c75
+green=#98c379
+yellow=#e5c07b
+blue=#61afef
+magenta=#c678dd
+cyan=#56b6c2
+orange=#d19a66

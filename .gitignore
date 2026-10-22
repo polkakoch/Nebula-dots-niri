@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.nbtmp
+*.tmp
+*.tmp.png
+.DS_Store
+dist/

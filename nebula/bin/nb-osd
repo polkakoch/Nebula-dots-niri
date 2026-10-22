@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Nebula — brightness and volume. The bar pill (nb-pill) shows them: it notices changes and
+# grows by itself, we only give it a nudge from here so it reacts instantly.
+#   nb-osd brightness up|down|set <0-100>
+#   nb-osd volume up|down|mute|set <0-100>
+#   nb-osd mic mute
+. "$(dirname "$(readlink -f "$0")")/../lib.sh"
+
+poke() { # <volume|brightness> <show|mic> — into the pill's FIFO, never blocking
+    local f="$NB_RUNTIME/pill-$1.fifo"
+    [ -p "$f" ] && { printf '%s\n' "$2" 1<>"$f"; } 2>/dev/null
+}
+
+volume() {
+    case "$1" in
+        up|down)
+            wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
+            wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ "${VOLUME_STEP}%$([ "$1" = up ] && echo + || echo -)" ;;
+        mute) wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle ;;
+        set)  wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ "$2%" ;;
+    esac
+    poke volume show
+}
+
+brightness() {
+    case "$1" in
+        up)   brightnessctl -q set "${BRIGHTNESS_STEP}%+" ;;
+        down) brightnessctl -q -n2 set "${BRIGHTNESS_STEP}%-" ;;
+        set)  brightnessctl -q -n2 set "$2%" ;;
+    esac
+    poke brightness show
+}
+
+case "$1:$2" in
+    brightness:up|brightness:down|brightness:set) brightness "$2" "$3" ;;
+    volume:up|volume:down|volume:mute|volume:set) volume "$2" "$3" ;;
+    mic:mute) wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle; poke volume mic ;;
+    *) sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac

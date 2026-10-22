@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Nebula — profile photo
+#   nb-avatar set <picture>   a 512px square → ~/.face (+ ~/.face.icon) and the login screen (AccountsService)
+#   nb-avatar remove
+# The photo shows up in the Control Center, the search ("Power"), the hyprlock lock screen and SDDM/GDM.
+. "$(dirname "$(readlink -f "$0")")/../lib.sh"
+
+case "$1" in
+    set)
+        src=$(readlink -f "$2")
+        [ -f "$src" ] || { tf "Нет файла: %s\n" "$2" >&2; exit 1; }
+        tmp="$NB_CACHE/face.png"
+        magick "${src}[0]" -auto-orient -thumbnail '512x512^' -gravity center -extent 512x512 -strip "$tmp" 2>/dev/null \
+            || { nb_notify "$(t "Профиль")" "$(t "Не удалось открыть картинку")" dialog-error; exit 1; }
+        cp -f "$tmp" "$HOME/.face"
+        # keep the original for "Adjust crop" in the Control Center (a crop never becomes the original)
+        [ "$src" = "$(readlink -f "$NB_CACHE/face-crop.png")" ] || cp -f "$src" "$NB_STATE/avatar-src"
+        [ -e "$HOME/.face.icon" ] && [ ! -L "$HOME/.face.icon" ] || ln -sfn .face "$HOME/.face.icon"
+        # login screen: AccountsService lets you change your own photo without a password
+        gdbus call --system --dest org.freedesktop.Accounts \
+            --object-path "/org/freedesktop/Accounts/User$(id -u)" \
+            --method org.freedesktop.Accounts.User.SetIconFile "$HOME/.face" >/dev/null 2>&1
+        [ "$3" = --quiet ] || nb_notify "$(t "Профиль")" "$(t "Фото обновлено")" "$HOME/.face" ;;
+    remove)
+        rm -f "$HOME/.face" "$NB_STATE/avatar-src"
+        [ -L "$HOME/.face.icon" ] && rm -f "$HOME/.face.icon" ;;
+    *) sed -n '2,5p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac

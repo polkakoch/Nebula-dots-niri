@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Nebula — a screenshot of an area, with the satty editor (or straight to the clipboard and a file)
+. "$(dirname "$(readlink -f "$0")")/../lib.sh"
+dir="$HOME/Pictures/Screenshots"; mkdir -p "$dir"
+file="$dir/Screenshot $(date '+%Y-%m-%d %H-%M-%S').png"
+geom=$(slurp -d -b '#00000066' -c '#ffffffcc' -w 2) || exit 0
+if has satty; then
+    grim -g "$geom" - | satty --filename - --copy-command wl-copy --output-filename "$file" --early-exit
+else
+    grim -g "$geom" "$file" && wl-copy < "$file" && nb_notify "$(t "Скриншот")" "$(t "Скопирован и сохранён")" "$file"
+fi

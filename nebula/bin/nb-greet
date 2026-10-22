@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Nebula — a small hello when you log in: "Good morning, <name>", what day it is,
+# a bit of mood and a random tip.
+#   nb-greet          at login (only with GREETING=1; waits for the notification server to wake up)
+#   nb-greet --now    right away, whatever the setting says
+. "$(dirname "$(readlink -f "$0")")/../lib.sh"
+
+if [ "$1" != "--now" ]; then
+    [ "${GREETING:-1}" = 1 ] || exit 0
+    sleep 4
+fi
+
+name=$(getent passwd "$(id -un)" | cut -d: -f5 | cut -d, -f1)
+[ -n "$name" ] || name=$(id -un)
+
+h=$(date +%-H)
+if   [ "$h" -lt 5 ];  then hello=$(t "Доброй ночи")
+elif [ "$h" -lt 12 ]; then hello=$(t "Доброе утро")
+elif [ "$h" -lt 18 ]; then hello=$(t "Добрый день")
+else                       hello=$(t "Добрый вечер"); fi
+
+dow=$(date +%u)
+if [ "$NB_LANG" = ru ]; then
+    days=(Понедельник Вторник Среда Четверг Пятница Суббота Воскресенье)
+    months=(января февраля марта апреля мая июня июля августа сентября октября ноября декабря)
+    today="${days[$((dow - 1))]}, $(date +%-d) ${months[$(( $(date +%-m) - 1 ))]}"
+else
+    today=$(LC_TIME=C date '+%A, %B %-d')
+fi
+
+case "$dow" in
+    5)   mood=$(t "Пятница! Осталось чуть-чуть") ;;
+    6|7) mood=$(t "Выходной — можно никуда не спешить") ;;
+    *)   left=$((6 - dow))
+         if [ "$NB_LANG" = ru ]; then
+             case "$left" in 1) w="день" ;; 2|3|4) w="дня" ;; *) w="дней" ;; esac
+             mood="До выходных $left $w"
+         else
+             mood="$left day$([ "$left" -gt 1 ] && echo s) till the weekend"
+         fi ;;
+esac
+[ "$(date +%m-%d)" = "12-31" ] && mood=$(t "Завтра Новый год 🎄")
+[ "$(date +%m-%d)" = "01-01" ] && mood=$(t "С Новым годом! 🎆")
+[ "$h" -ge 1 ] && [ "$h" -lt 5 ] && mood=$(t "Пора бы и поспать 🌙")
+
+tips=(
+    "Super+Пробел — и всё под рукой"
+    "Совет: Super+Shift+W — случайные обои"
+    "Совет: в поиске «2+2» сразу считает"
+    "Совет: Super+A — пункт управления"
+    "Совет: Super+V — история буфера обмена"
+    "Совет: наведите мышь на уведомление — оно подождёт"
+    "Хорошего дня ✨"
+    "Сегодня отличный день, чтобы что-нибудь доделать"
+    "Помни про воду и осанку"
+)
+tip=$(t "${tips[$((RANDOM % ${#tips[@]}))]}")
+
+face="$HOME/.face"; [ -s "$face" ] || face=preferences-desktop-theme
+nb_notify "$hello, $name" "$today · $mood
+<span alpha=\"70%\">$tip</span>" "$face"

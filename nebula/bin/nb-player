@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Kept for compatibility: the player is part of nb-shell now (nb-shell media)
+exec "$(dirname "$(readlink -f "$0")")/nb-shell" media

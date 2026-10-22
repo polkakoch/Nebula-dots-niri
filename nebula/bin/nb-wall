@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+# Nebula — wallpaper (awww)
+#   nb-wall set <file>      set a wallpaper
+#   nb-wall random          a random one from WALL_DIR
+#   nb-wall next | prev     next / previous in the list
+#   nb-wall restore         bring back the last one
+#   nb-wall login           at login: the last one, or a fresh random one (WALL_ON_LOGIN=1)
+#   nb-wall current         path to the current wallpaper
+. "$(dirname "$(readlink -f "$0")")/../lib.sh"
+
+BACKDROP_NS="backdrop"   # a second awww daemon: the blurred wallpaper behind the overview (Mod+O)
+
+daemon_up() { awww query >/dev/null 2>&1; }
+
+ensure_daemon() {
+    has awww || { nb_notify "Nebula" "$(t "awww не установлен — обои недоступны")" dialog-error; exit 1; }
+    if ! daemon_up; then
+        setsid -f awww-daemon >/dev/null 2>&1
+        for _ in $(seq 50); do daemon_up && break; sleep 0.1; done
+    fi
+    if [ "${OVERVIEW_BLUR:-1}" = 1 ] && ! awww query -n "$BACKDROP_NS" >/dev/null 2>&1; then
+        setsid -f awww-daemon -n "$BACKDROP_NS" >/dev/null 2>&1
+    fi
+}
+
+# A blurred copy for the overview background (cached)
+backdrop() {
+    [ "${OVERVIEW_BLUR:-1}" = 1 ] || return 0
+    local src="$1" out
+    out="$NB_CACHE/backdrop/$(printf '%s' "$src" | md5sum | cut -c1-32).jpg"
+    mkdir -p "$NB_CACHE/backdrop"
+    if [ ! -s "$out" ]; then
+        magick "${src}[0]" -auto-orient -resize '1920x1080^' -gravity center -extent 1920x1080 \
+            -scale 25% -blur 0x10 -resize 400% -modulate 75,110 -quality 90 "$out.tmp.jpg" 2>/dev/null \
+            && mv -f "$out.tmp.jpg" "$out"
+    fi
+    for _ in $(seq 30); do awww query -n "$BACKDROP_NS" >/dev/null 2>&1 && break; sleep 0.1; done
+    [ -s "$out" ] && awww img -n "$BACKDROP_NS" "$out" --transition-type fade --transition-duration 0.8 >/dev/null 2>&1
+}
+
+set_wall() {
+    local f="$1" quiet="$2"
+    f=$(readlink -f "$f")
+    [ -f "$f" ] || { nb_notify "$(t "Обои")" "$(tf "Файл не найден: %s" "$1")" dialog-error; return 1; }
+    ensure_daemon
+    local pos
+    pos="$(awk -v s="$RANDOM" 'BEGIN{srand(s); printf "%.2f,%.2f", 0.15+rand()*0.7, 0.15+rand()*0.7}')"
+    awww img "$f" --transition-type "$WALL_TRANSITION" --transition-pos "$pos" \
+        --transition-duration "$WALL_TRANSITION_DURATION" --transition-fps "$WALL_TRANSITION_FPS" \
+        --transition-bezier .43,1.19,1,.4 >/dev/null 2>&1
+    echo "$f" > "$NB_STATE/wallpaper"
+    ln -sfn "$f" "$NB_CACHE/wallpaper"          # for hyprlock and friends
+    # a thumbnail (if there isn't one yet) — for the menu and the notification
+    local t; t=$(nb_thumb_path "$f")
+    [ -s "$t" ] || nb_make_thumb "$f" "$t"
+    # the "From wallpaper" theme gets recalculated for the new picture
+    if [ "$(nb_current_theme)" = matugen ]; then
+        "$NB_DIR/bin/nb-theme" apply matugen --quiet
+    else
+        "$NB_DIR/bin/nb-theme" render hyprlock.conf   # wallpaper for the lock screen
+    fi
+    [ "$quiet" = "--quiet" ] || nb_notify "$(t "Обои")" "$(basename "$f")" "$t"
+    backdrop "$f" &
+    wait
+}
+
+current() {
+    local c; c=$(nb_current_wall)
+    if [ -z "$c" ] || [ ! -f "$c" ]; then
+        c=$(awww query 2>/dev/null | sed -n 's/.*currently displaying: image: //p' | head -1)
+    fi
+    echo "$c"
+}
+
+step() { # step +1 | -1
+    local cur list n i idx
+    cur=$(current)
+    mapfile -t list < <(nb_list_walls)
+    n=${#list[@]}
+    [ "$n" -eq 0 ] && { nb_notify "$(t "Обои")" "$(tf "В %s нет картинок" "${WALL_DIR/#$HOME/~}")" dialog-warning; return 1; }
+    idx=-1
+    for i in "${!list[@]}"; do [ "${list[$i]}" = "$cur" ] && idx=$i && break; done
+    set_wall "${list[$(( (idx + $1 + n) % n ))]}"
+}
+
+random_wall() {
+    local cur list n pick
+    cur=$(current)
+    mapfile -t list < <(nb_list_walls)
+    n=${#list[@]}
+    [ "$n" -eq 0 ] && { nb_notify "$(t "Обои")" "$(tf "В %s нет картинок" "${WALL_DIR/#$HOME/~}")" dialog-warning; return 1; }
+    pick=${list[$((RANDOM % n))]}
+    [ "$n" -gt 1 ] && while [ "$pick" = "$cur" ]; do pick=${list[$((RANDOM % n))]}; done
+    set_wall "$pick" "$1"
+}
+
+case "$1" in
+    set)     set_wall "$2" "$3" ;;
+    random)  random_wall "$2" ;;
+    next)    step 1 ;;
+    prev)    step -1 ;;
+    current) current ;;
+    login|restore)
+        ensure_daemon
+        if [ "$1" = login ] && [ "${WALL_ON_LOGIN:-0}" = 1 ] && [ -n "$(nb_list_walls | head -1)" ]; then
+            WALL_TRANSITION=fade WALL_TRANSITION_DURATION=0.6 random_wall --quiet
+            nice -n 19 "$NB_DIR/bin/nb-thumbs" >/dev/null 2>&1 &
+            exit 0
+        fi
+        w=$(current)
+        if [ -n "$w" ] && [ -f "$w" ]; then
+            WALL_TRANSITION=fade WALL_TRANSITION_DURATION=0.6 set_wall "$w" --quiet
+        else
+            first=$(nb_list_walls | head -1)
+            [ -n "$first" ] && set_wall "$first" --quiet
+        fi
+        # thumbnails for the menu — ahead of time, in the background
+        nice -n 19 "$NB_DIR/bin/nb-thumbs" >/dev/null 2>&1 &
+        ;;
+    *) sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac

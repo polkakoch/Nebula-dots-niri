@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Makes the missing wallpaper thumbnails (in parallel). --wait: wait if a run is already going
+. "$(dirname "$(readlink -f "$0")")/../lib.sh"
+has magick || { echo "nb-thumbs needs imagemagick" >&2; exit 1; }
+
+exec 9>"$NB_RUNTIME/thumbs.lock"
+if [ "$1" = "--wait" ]; then flock 9; else flock -n 9 || exit 0; fi
+
+todo=()
+while IFS=$'\t' read -r t f; do
+    [ -s "$t" ] && [ "$t" -nt "$f" ] && continue
+    todo+=("$f")
+done < <(nb_list_walls_thumbs)
+[ ${#todo[@]} -eq 0 ] && exit 0
+
+export -f nb_make_thumb nb_thumb_path
+export NB_THUMBS
+printf '%s\0' "${todo[@]}" | xargs -0 -P "$(nproc)" -I{} bash -c 'nb_make_thumb "$1" "$(nb_thumb_path "$1")"' _ {}

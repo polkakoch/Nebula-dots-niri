@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Nebula — notifications from the command line and for the waybar module.
+# The notifications themselves are drawn by nb-shell; when it isn't running
+# mako steps in, so every command quietly falls back to makoctl.
+#   nb-notif status    JSON for waybar
+#   nb-notif dnd       toggle Do Not Disturb
+#   nb-notif dismiss   hide everything on screen
+#   nb-notif clear     hide everything and forget the history
+#   nb-notif restore   show the last one again
+#   nb-notif test      a few sample notifications
+. "$(dirname "$(readlink -f "$0")")/../lib.sh"
+
+HIST="$NB_STATE/notifications.json"
+DND="$NB_STATE/dnd"
+
+shell_up() {
+    local pidf="${XDG_RUNTIME_DIR:-/tmp}/nebula/shell.pid"
+    [ -f "$pidf" ] && kill -0 "$(cat "$pidf")" 2>/dev/null
+}
+
+to_shell() { "$NB_DIR/bin/nb-shell" notify "$1"; }
+
+case "$1" in
+    status)
+        n=$(jq 'length' "$HIST" 2>/dev/null || echo 0)
+        if [ -e "$DND" ]; then
+            printf '{"text":"󰽥","alt":"dnd","class":"dnd","tooltip":"%s"}\n' \
+                "$(t "Пункт управления (Super+A)")\\n$(t "Не беспокоить: включено · ПКМ — выключить")"
+        else
+            printf '{"text":"\\uf1de","alt":"on","class":"%s","tooltip":"%s"}\n' \
+                "$([ "${n:-0}" -gt 0 ] && echo has || echo none)" \
+                "$(t "Пункт управления (Super+A)")\\n$(t "Уведомлений"): ${n:-0} · $(t "ПКМ — не беспокоить · СКМ — убрать все")"
+        fi ;;
+    dnd)
+        if shell_up; then
+            to_shell dnd
+        else
+            if [ -e "$DND" ]; then rm -f "$DND"; makoctl mode -r dnd >/dev/null 2>&1
+            else touch "$DND"; makoctl mode -a dnd >/dev/null 2>&1; fi
+            pkill -RTMIN+8 -x waybar
+        fi
+        sleep 0.1
+        if [ -e "$DND" ]; then
+            notify-send -a Nebula -u critical -t 1500 -i notification-disabled "$(t "Не беспокоить")" "$(t "Уведомления скрыты")"
+        else
+            nb_notify "$(t "Не беспокоить")" "$(t "Выключено — уведомления снова видны")" notification-active
+        fi ;;
+    dismiss) shell_up && to_shell dismiss || makoctl dismiss --all ;;
+    clear)   shell_up && to_shell clear || { makoctl dismiss --all; echo '[]' > "$HIST"; pkill -RTMIN+8 -x waybar; } ;;
+    restore) shell_up && to_shell restore || makoctl restore ;;
+    test)    shell_up && to_shell test || notify-send -a Nebula "$(t "Проверка")" "$(t "Уведомления работают")" ;;
+    *) sed -n '5,10p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac

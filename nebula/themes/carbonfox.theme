@@ -1,0 +1,19 @@
+# Nebula theme: Carbonfox
+name="Carbonfox"
+mode=dark
+bg=#161616
+bg_alt=#0c0c0c
+surface=#252525
+overlay=#353535
+fg=#f2f4f8
+fg_dim=#b6b8bb
+muted=#6e6f70
+accent=#78a9ff
+accent2=#be95ff
+red=#ee5396
+green=#25be6a
+yellow=#f1c21b
+blue=#78a9ff
+magenta=#be95ff
+cyan=#33b1ff
+orange=#ff832b

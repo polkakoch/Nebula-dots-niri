@@ -1,0 +1,63 @@
+// ── Animations ──────────────────────────────────────────────────────
+// Smooth springs without the rubber-band wobble; windows open from slightly smaller.
+// The overall speed and the off switch live in the side panel (Settings → Animations),
+// which writes them into nebula-settings.kdl (slowdown / off).
+animations {
+    // switching workspaces and scrolling columns — soft, no bounce, like Spaces
+    workspace-switch {
+        spring damping-ratio=1.0 stiffness=700 epsilon=0.0001
+    }
+    horizontal-view-movement {
+        spring damping-ratio=1.0 stiffness=760 epsilon=0.0001
+    }
+    window-movement {
+        spring damping-ratio=0.92 stiffness=760 epsilon=0.0001
+    }
+    window-resize {
+        spring damping-ratio=0.95 stiffness=820 epsilon=0.0001
+    }
+    overview-open-close {
+        spring damping-ratio=1.0 stiffness=720 epsilon=0.0001
+    }
+    config-notification-open-close {
+        spring damping-ratio=0.75 stiffness=900 epsilon=0.001
+    }
+
+    // Opening: the window floats up from 92%, rising a little and fading in
+    window-open {
+        duration-ms 340
+        curve "cubic-bezier" 0.16 1 0.3 1
+        custom-shader r"
+            vec4 open_color(vec3 coords_geo, vec3 size_geo) {
+                float p = niri_clamped_progress;
+                float scale = mix(0.92, 1.0, p);
+                vec2 c = (coords_geo.xy - vec2(0.5, 0.6)) / scale + vec2(0.5, 0.6);
+                c.y -= (1.0 - p) * 18.0 / size_geo.y;
+                vec3 tex = niri_geo_to_tex * vec3(c, 1.0);
+                if (tex.x < 0.0 || tex.x > 1.0 || tex.y < 0.0 || tex.y > 1.0)
+                    return vec4(0.0);
+                vec4 color = texture2D(niri_tex, tex.st);
+                return color * smoothstep(0.0, 0.55, p);
+            }
+        "
+    }
+
+    // Closing: quickly shrinks to 94% and melts away
+    window-close {
+        duration-ms 210
+        curve "cubic-bezier" 0.4 0 0.7 0.2
+        custom-shader r"
+            vec4 close_color(vec3 coords_geo, vec3 size_geo) {
+                float p = niri_clamped_progress;
+                float scale = mix(1.0, 0.94, p);
+                vec2 c = (coords_geo.xy - vec2(0.5)) / scale + vec2(0.5);
+                c.y -= p * 10.0 / size_geo.y;
+                vec3 tex = niri_geo_to_tex * vec3(c, 1.0);
+                if (tex.x < 0.0 || tex.x > 1.0 || tex.y < 0.0 || tex.y > 1.0)
+                    return vec4(0.0);
+                vec4 color = texture2D(niri_tex, tex.st);
+                return color * (1.0 - p);
+            }
+        "
+    }
+}

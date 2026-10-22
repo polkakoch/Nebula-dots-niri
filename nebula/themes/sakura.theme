@@ -1,0 +1,19 @@
+# Nebula theme: Sakura
+name="Sakura"
+mode=dark
+bg=#1f1a24
+bg_alt=#18141c
+surface=#2c2433
+overlay=#3d3245
+fg=#f3e6ee
+fg_dim=#d4bfcd
+muted=#8a7486
+accent=#f5a9c9
+accent2=#c9a7f5
+red=#f2789a
+green=#a8d8b0
+yellow=#f5d9a0
+blue=#a0c4f5
+magenta=#f5a9c9
+cyan=#a0e0e0
+orange=#f5b89a

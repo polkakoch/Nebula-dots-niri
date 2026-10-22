@@ -1,0 +1,19 @@
+# Nebula theme: Everforest
+name="Everforest"
+mode=dark
+bg=#2d353b
+bg_alt=#232a2e
+surface=#343f44
+overlay=#475258
+fg=#d3c6aa
+fg_dim=#9da9a0
+muted=#7a8478
+accent=#a7c080
+accent2=#83c092
+red=#e67e80
+green=#a7c080
+yellow=#dbbc7f
+blue=#7fbbb3
+magenta=#d699b6
+cyan=#83c092
+orange=#e69875

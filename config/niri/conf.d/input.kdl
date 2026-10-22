@@ -1,0 +1,24 @@
+// ── Input ──────────────────────────────────────────────────────────
+input {
+    keyboard {
+        // Layouts and the switch key live in nebula-settings.kdl (settings.conf: KB_LAYOUTS, KB_SWITCH).
+        // The default is us,ru on Caps Lock (Shift+Caps is the real Caps Lock). The Caps light
+        // isn't tied to the layout, because it would never light up for Russian
+        repeat-delay 280
+        repeat-rate 40
+        track-layout "global"
+        numlock
+    }
+
+    // touchpad, mouse and focus-follows-mouse are in nebula-settings.kdl
+    // (Control Center → Settings → Input)
+    // pressing Super+N again takes you back to the previous workspace
+    workspace-auto-back-and-forth
+}
+
+cursor {
+    xcursor-theme "Adwaita"
+    xcursor-size 24
+    hide-when-typing
+    hide-after-inactive-ms 4000
+}

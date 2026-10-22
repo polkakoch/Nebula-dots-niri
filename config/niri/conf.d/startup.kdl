@@ -1,0 +1,30 @@
+// ── Environment and autostart ───────────────────────────────────────
+environment {
+    QT_QPA_PLATFORM "wayland;xcb"
+    ELECTRON_OZONE_PLATFORM_HINT "auto"
+    TERMINAL "kitty"
+    // Qt/KDE apps (Dolphin…): KDE integration, Nebula theme colors via kdeglobals
+    QT_QPA_PLATFORMTHEME "kde"
+}
+
+// The same environment for apps started by D-Bus (Dolphin from "Open folder", for example)
+spawn-sh-at-startup "dbus-update-activation-environment --systemd QT_QPA_PLATFORMTHEME TERMINAL"
+
+// Wallpaper (plus a blurred copy for the overview) and menu previews
+spawn-sh-at-startup "~/.config/nebula/bin/nb-wall login"
+// Search, Control Center, the player and notifications — one resident GTK4 process
+spawn-sh-at-startup "~/.config/nebula/bin/nb-shell daemon"
+// A hello at login (GREETING in settings.conf; Control Center → Extras)
+spawn-sh-at-startup "~/.config/nebula/bin/nb-greet"
+// The bar (its volume/brightness pills are nb-pill)
+spawn-at-startup "waybar"
+// Lock when idle (~/.config/swayidle/config)
+spawn-at-startup "swayidle" "-w"
+// polkit agent (the password prompt for GUI apps)
+spawn-sh-at-startup "for a in /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 /usr/lib/polkit-kde-authentication-agent-1 /usr/lib/hyprpolkitagent/hyprpolkitagent; do [ -x \"$a\" ] && exec \"$a\"; done"
+// Clipboard history
+spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
+spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
+// Network and Bluetooth icons in the tray (if installed)
+spawn-sh-at-startup "command -v nm-applet >/dev/null && exec nm-applet --indicator"
+spawn-sh-at-startup "command -v blueman-applet >/dev/null && exec blueman-applet"

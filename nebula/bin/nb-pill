@@ -1,0 +1,318 @@
+#!/usr/bin/env python3
+"""Nebula — a "living" volume or brightness pill for waybar (a continuous custom module).
+
+  nb-pill volume        volume:     follows PipeWire (pactl subscribe)
+  nb-pill brightness    brightness: follows /sys/class/backlight
+
+At rest the pill is compact (icon + percent). When the value changes — from anywhere: keys,
+the scroll wheel, pavucontrol, the Control Center — it smoothly grows and shows a bar, then
+shrinks back after OSD_DURATION seconds.
+
+The width animates through a CSS min-width transition (classes grow → wide → shrink) and the
+text only changes once the pill is already wide, so nothing jumps around.
+nb-osd can nudge the pill through a FIFO ($XDG_RUNTIME_DIR/nebula/pill-<kind>.fifo):
+  show — expand even without a change (volume already at 100%) · mic — show the microphone.
+"""
+import json
+import os
+import re
+import select
+import shutil
+import signal
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+NB_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(NB_DIR / "shell"))
+from i18n import tr  # noqa: E402
+STATE = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "nebula"
+CACHE = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "nebula"
+RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "nebula"
+
+GROW_S = 0.22     # how long the width grows before the bar appears (matches the CSS transition)
+CELLS = 12        # segments in the bar
+
+
+def settings():
+    """OSD_DURATION from settings.conf (plain KEY=value)."""
+    out = {"OSD_DURATION": "1.6"}
+    try:
+        for line in (NB_DIR / "settings.conf").read_text().splitlines():
+            m = re.match(r'\s*([A-Z_]+)=["\']?([^"\'#]*)', line)
+            if m:
+                out[m.group(1)] = m.group(2).strip()
+    except OSError:
+        pass
+    return out
+
+
+def theme():
+    tid = "catppuccin-mocha"
+    try:
+        tid = (STATE / "theme").read_text().strip() or tid
+    except OSError:
+        pass
+    path = CACHE / "matugen.theme" if tid == "matugen" else NB_DIR / "themes" / f"{tid}.theme"
+    if not path.is_file():
+        path = NB_DIR / "themes" / "catppuccin-mocha.theme"
+    c = {}
+    for line in path.read_text().splitlines():
+        if not line.lstrip().startswith("#"):
+            for k, v in re.findall(r'(\w+)=("[^"]*"|\S+)', line):
+                c[k] = v.strip('"')
+    return c
+
+
+def mix(a, b, t):
+    a, b = a.lstrip("#"), b.lstrip("#")
+    return "#" + "".join(f"{round(int(a[i:i+2], 16) + (int(b[i:i+2], 16) - int(a[i:i+2], 16)) * t):02x}"
+                         for i in (0, 2, 4))
+
+
+def esc(s):
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+# ─── where the values come from ─────────────────────────────────────────────
+class Volume:
+    kind = "volume"
+
+    def __init__(self):
+        self.proc = None
+        if shutil.which("pactl"):
+            self.proc = subprocess.Popen(["pactl", "subscribe"], stdout=subprocess.PIPE,
+                                         stderr=subprocess.DEVNULL, text=True, bufsize=1)
+
+    def fds(self):
+        return [self.proc.stdout] if self.proc else []
+
+    def on_readable(self, f):
+        line = f.readline()
+        if not line:          # pactl died (pipewire restarted) — reconnect
+            time.sleep(1)
+            self.__init__()
+            return True
+        return "sink" in line or "server" in line
+
+    @staticmethod
+    def read(target="@DEFAULT_AUDIO_SINK@"):
+        try:
+            out = subprocess.run(["wpctl", "get-volume", target], capture_output=True,
+                                 text=True, timeout=2).stdout
+            m = re.search(r"([\d.]+)", out)
+            return (round(float(m.group(1)) * 100) if m else 0, "MUTED" in out)
+        except Exception:
+            return None
+
+    def get(self):
+        return self.read()
+
+    def icon(self, pct, muted):
+        if muted:
+            return "󰝟"
+        return "󰕿" if pct < 34 else "󰖀" if pct < 67 else "󰕾"
+
+    tooltip = tr("Громкость: {pct}%\nЛКМ — пункт управления · СКМ — выкл. звук · ПКМ — микшер · колесо — громкость")
+
+
+class Brightness:
+    kind = "brightness"
+    POLL = 1.5   # changes from outside (laptop keys and such); our own arrive instantly via the FIFO
+
+    def __init__(self):
+        self.dev = None
+        base = Path("/sys/class/backlight")
+        devs = sorted(base.iterdir(), key=lambda p: ("intel" not in p.name and "amdgpu" not in p.name, p.name)) \
+            if base.is_dir() else []
+        if devs:
+            self.dev = devs[0]
+            self.max = int((self.dev / "max_brightness").read_text() or 1) or 1
+
+    def fds(self):
+        return []
+
+    def get(self):
+        if not self.dev:
+            return None
+        try:
+            return (round(int((self.dev / "brightness").read_text()) * 100 / self.max), False)
+        except (OSError, ValueError):
+            return None
+
+    def icon(self, pct, _muted):
+        return ("󰃞", "󰃟", "󰃝", "󰃠")[min(3, pct * 4 // 101)]
+
+    tooltip = tr("Яркость: {pct}%\nЛКМ — пункт управления · колесо — яркость")
+
+
+# ─── the pill ───────────────────────────────────────────────────────────────
+class Pill:
+    def __init__(self, src):
+        self.src = src
+        self.colors = theme()
+        self.theme_mtime = self.theme_stamp()
+        self.duration = float(settings().get("OSD_DURATION") or 1.6)
+        self.value = src.get()
+        self.phase = "compact"          # compact | grow | wide | shrink
+        self.until = 0.0                # when to move to the next phase
+        self.mic = None                 # (pct, muted) — show the microphone instead of volume
+        RUNTIME.mkdir(parents=True, exist_ok=True)
+        self.fifo_path = RUNTIME / f"pill-{src.kind}.fifo"
+        try:
+            if not self.fifo_path.exists():
+                os.mkfifo(self.fifo_path)
+        except OSError:
+            pass
+        # O_RDWR: open() doesn't block, and there's no endless EOF when nobody is writing
+        self.fifo = os.fdopen(os.open(self.fifo_path, os.O_RDWR | os.O_NONBLOCK), "r")
+
+    def theme_stamp(self):
+        try:
+            return (STATE / "theme").stat().st_mtime
+        except OSError:
+            return 0
+
+    # what to show
+    def text(self, wide):
+        val = self.mic or self.value
+        if val is None:
+            return ""
+        pct, muted = val
+        c = self.colors
+        if self.mic:
+            icon = "󰍭" if muted else "󰍬"
+            tint = c.get("muted") if muted else c.get("accent")
+        else:
+            icon = self.src.icon(pct, muted)
+            tint = c.get("muted") if muted else (c.get("cyan") if self.src.kind == "volume" else c.get("yellow"))
+        label = tr("выкл") if muted else f"{pct}%"
+        head = f"<span font_family='JetBrainsMono Nerd Font' size='118%' foreground='{tint}'>{icon}</span>"
+        if not wide:
+            return f"{head}  {label}"
+        filled = 0 if muted else max(1 if pct > 0 else 0, min(CELLS, round(pct * CELLS / 100)))
+        bar = "".join(f"<span foreground='{mix(c['accent'], c['accent2'], i / (CELLS - 1))}'>━</span>"
+                      for i in range(filled))
+        if filled < CELLS:
+            bar += f"<span foreground='{c['fg']}' fgalpha='20%'>{'━' * (CELLS - filled)}</span>"
+        return (f"{head}  <span font_family='JetBrainsMono Nerd Font' letter_spacing='-1024'>{bar}</span>"
+                f"  <span font_family='JetBrainsMono Nerd Font'>{label:>4}</span>")
+
+    def emit(self):
+        if self.value is None and not self.mic:
+            print(json.dumps({"text": "", "class": "hidden"}), flush=True)
+            return
+        wide_text = self.phase == "wide"
+        classes = [self.src.kind, self.phase]
+        if self.phase in ("grow", "wide", "shrink"):
+            classes.append("expanded")
+        val = self.mic or self.value
+        if val and val[1]:
+            classes.append("muted")
+        pct = (self.value or (0, False))[0]
+        print(json.dumps({"text": self.text(wide_text), "class": classes,
+                          "tooltip": self.src.tooltip.format(pct=pct)}, ensure_ascii=False), flush=True)
+
+    def expand(self):
+        now = time.monotonic()
+        if self.phase in ("compact", "shrink"):
+            self.phase = "grow"
+            self.until = now + GROW_S
+        else:
+            self.phase = "wide"
+            self.until = now + self.duration
+        self.emit()
+
+    def advance(self):
+        now = time.monotonic()
+        if self.phase == "compact" or now < self.until:
+            return
+        if self.phase == "grow":
+            self.phase, self.until = "wide", now + self.duration
+        elif self.phase == "wide":
+            self.mic = None
+            self.phase, self.until = "shrink", now + 0.05
+        elif self.phase == "shrink":
+            self.phase = "compact"
+        self.emit()
+
+    def refresh(self, force=False):
+        val = self.src.get()
+        changed = val != self.value
+        self.value = val
+        if changed or force:
+            self.expand()
+
+    def on_fifo(self):
+        try:
+            data = self.fifo.read() or ""
+        except OSError:
+            data = ""
+        for cmd in data.split():
+            if cmd == "mic":
+                self.mic = Volume.read("@DEFAULT_AUDIO_SOURCE@")
+                self.expand()
+            elif cmd == "show":
+                self.refresh(force=True)
+            elif cmd == "theme":
+                self.colors = theme()
+                self.emit()
+
+    def timeout(self):
+        if self.phase != "compact":
+            return max(0.0, self.until - time.monotonic())
+        return getattr(self.src, "POLL", None)
+
+    def run(self):
+        self.emit()
+        out = select.poll()
+        out.register(1, select.POLLERR | select.POLLHUP)   # waybar closed the pipe — time to go
+        while True:
+            fds = [self.fifo, *self.src.fds()]
+            t = self.timeout()
+            ready, _, _ = select.select(fds, [], [], 30 if t is None else min(t, 30))
+            if out.poll(0):
+                return
+            dirty = False
+            for f in ready:
+                if f is self.fifo:
+                    self.on_fifo()
+                elif self.src.on_readable(f):
+                    dirty = True
+            if dirty:
+                time.sleep(0.015)   # one change tends to come as a burst of events
+                self.refresh()
+            elif not ready and self.phase == "compact":
+                # polling (brightness) and theme changes
+                stamp = self.theme_stamp()
+                if stamp != self.theme_mtime:
+                    self.theme_mtime, self.colors = stamp, theme()
+                    self.emit()
+                if getattr(self.src, "POLL", None):
+                    self.refresh()
+            self.advance()
+
+
+def main():
+    kind = sys.argv[1] if len(sys.argv) > 1 else ""
+    src = {"volume": Volume, "brightness": Brightness}.get(kind)
+    if not src:
+        print(__doc__)
+        return 1
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)   # waybar went away — leave quietly
+    # one instance per kind: end the old one (left over after a waybar reload)
+    RUNTIME.mkdir(parents=True, exist_ok=True)
+    pidf = RUNTIME / f"pill-{kind}.pid"
+    try:
+        old = int(pidf.read_text())
+        if old != os.getpid() and f"nb-pill\0{kind}".encode() in open(f"/proc/{old}/cmdline", "rb").read():
+            os.kill(old, signal.SIGTERM)
+    except (OSError, ValueError):
+        pass
+    pidf.write_text(str(os.getpid()))
+    Pill(src()).run()
+
+
+if __name__ == "__main__":
+    sys.exit(main())

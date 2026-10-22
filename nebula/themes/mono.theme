@@ -1,0 +1,19 @@
+# Nebula theme: Monochrome
+name="Monochrome"
+mode=dark
+bg=#121212
+bg_alt=#0a0a0a
+surface=#1f1f1f
+overlay=#2e2e2e
+fg=#e8e8e8
+fg_dim=#bdbdbd
+muted=#6b6b6b
+accent=#f0f0f0
+accent2=#a0a0a0
+red=#e06c75
+green=#b5bd68
+yellow=#e5c07b
+blue=#81a2be
+magenta=#b294bb
+cyan=#8abeb7
+orange=#de935f

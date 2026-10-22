@@ -1,0 +1,19 @@
+# Nebula theme: Catppuccin Mocha
+name="Catppuccin Mocha"
+mode=dark
+bg=#1e1e2e
+bg_alt=#181825
+surface=#313244
+overlay=#45475a
+fg=#cdd6f4
+fg_dim=#bac2de
+muted=#6c7086
+accent=#cba6f7
+accent2=#89b4fa
+red=#f38ba8
+green=#a6e3a1
+yellow=#f9e2af
+blue=#89b4fa
+magenta=#f5c2e7
+cyan=#94e2d5
+orange=#fab387

@@ -1,0 +1,163 @@
+// ── Keyboard shortcuts (Mod = Super) ────────────────────────────────
+// The full list is always one key away: Super+Shift+/
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+
+    // ── Nebula: Search, Control Center, wallpaper, themes ──
+    // nb-shell keeps running in the background, so these open instantly; press again to close
+    Mod+Space       repeat=false hotkey-overlay-title="Поиск: приложения, калькулятор, команды" { spawn-sh "~/.config/nebula/bin/nb-shell launcher apps"; }
+    Mod+A           repeat=false hotkey-overlay-title="Пункт управления (боковая панель)" { spawn-sh "~/.config/nebula/bin/nb-shell panel"; }
+    Mod+Return      hotkey-overlay-title="Терминал" { spawn "kitty"; }
+    Mod+T           hotkey-overlay-title=null { spawn "kitty"; }
+    Mod+W           repeat=false hotkey-overlay-title="Обои" { spawn-sh "~/.config/nebula/bin/nb-shell panel walls"; }
+    Mod+Shift+W     hotkey-overlay-title="Случайные обои" { spawn-sh "~/.config/nebula/bin/nb-wall random"; }
+    Mod+Shift+BracketRight hotkey-overlay-title="Следующие обои" { spawn-sh "~/.config/nebula/bin/nb-wall next"; }
+    Mod+Shift+BracketLeft  hotkey-overlay-title="Предыдущие обои" { spawn-sh "~/.config/nebula/bin/nb-wall prev"; }
+    Mod+Shift+T     repeat=false hotkey-overlay-title="Темы" { spawn-sh "~/.config/nebula/bin/nb-shell panel appearance"; }
+    Mod+V           repeat=false hotkey-overlay-title="История буфера" { spawn-sh "~/.config/nebula/bin/nb-shell panel clip"; }
+    Mod+Escape      repeat=false hotkey-overlay-title="Питание" { spawn-sh "~/.config/nebula/bin/nb-shell panel power"; }
+    Mod+Shift+E     repeat=false hotkey-overlay-title=null { spawn-sh "~/.config/nebula/bin/nb-shell panel power"; }
+    Mod+Shift+L     hotkey-overlay-title="Заблокировать экран" { spawn-sh "~/.config/nebula/bin/nb-power lock"; }
+    Mod+Shift+A     hotkey-overlay-title="Картинка fastfetch: следующая" { spawn-sh "~/.config/nebula/bin/nb-fetch next"; }
+
+    // ── Apps ──
+    Mod+E           hotkey-overlay-title="Файлы" { spawn-sh "dolphin || nautilus || thunar"; }
+    Mod+B           hotkey-overlay-title="Браузер" { spawn-sh "gtk-launch \"$(xdg-settings get default-web-browser 2>/dev/null)\" 2>/dev/null || firefox"; }
+    Ctrl+Shift+Escape hotkey-overlay-title="Диспетчер задач (btop)" { spawn "kitty" "--class" "nebula-float" "-e" "btop"; }
+
+    // ── Notifications ──
+    Mod+N           hotkey-overlay-title="Убрать все уведомления" { spawn-sh "~/.config/nebula/bin/nb-notif dismiss"; }
+    Mod+Shift+N     hotkey-overlay-title="Не беспокоить: вкл/выкл" { spawn-sh "~/.config/nebula/bin/nb-notif dnd"; }
+    Mod+Ctrl+N      hotkey-overlay-title="Вернуть последнее уведомление" { spawn-sh "~/.config/nebula/bin/nb-notif restore"; }
+
+    // ── Brightness: hardware keys ──
+    XF86MonBrightnessDown allow-when-locked=true { spawn-sh "~/.config/nebula/bin/nb-osd brightness down"; }
+    XF86MonBrightnessUp   allow-when-locked=true { spawn-sh "~/.config/nebula/bin/nb-osd brightness up"; }
+
+    // ── Sound and media ──
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "~/.config/nebula/bin/nb-osd volume up"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "~/.config/nebula/bin/nb-osd volume down"; }
+    XF86AudioMute        allow-when-locked=true { spawn-sh "~/.config/nebula/bin/nb-osd volume mute"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn-sh "~/.config/nebula/bin/nb-osd mic mute"; }
+    XF86AudioPlay        allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioPause       allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioNext        allow-when-locked=true { spawn "playerctl" "next"; }
+    XF86AudioPrev        allow-when-locked=true { spawn "playerctl" "previous"; }
+
+    // ── Screenshots ──
+    Print           hotkey-overlay-title="Скриншот области" { screenshot; }
+    Ctrl+Print      hotkey-overlay-title="Скриншот экрана" { screenshot-screen; }
+    Alt+Print       hotkey-overlay-title="Скриншот окна" { screenshot-window; }
+    Mod+Shift+S     hotkey-overlay-title="Скриншот с редактором (satty)" { spawn-sh "~/.config/nebula/bin/nb-shot"; }
+
+    // ── Windows ──
+    Mod+Q           repeat=false hotkey-overlay-title="Закрыть окно" { close-window; }
+    Mod+O           repeat=false { toggle-overview; }
+    // Super+Tab — every window at once, same as the hot corner
+    Mod+Tab         repeat=false hotkey-overlay-title="Обзор: все окна (Super+Tab)" { toggle-overview; }
+    // Super+F — truly fullscreen, over the bar; press again to come back
+    Mod+F           hotkey-overlay-title="Окно на весь экран (и обратно)" { fullscreen-window; }
+    Mod+Shift+F     hotkey-overlay-title="Развернуть колонку (под панелью)" { maximize-column; }
+    Mod+M           hotkey-overlay-title="Развернуть до краёв (без отступов)" { maximize-window-to-edges; }
+    Mod+Ctrl+F      { expand-column-to-available-width; }
+    Mod+C           { center-column; }
+    Mod+Ctrl+C      { center-visible-columns; }
+    Mod+R           { switch-preset-column-width; }
+    Mod+Shift+R     { switch-preset-column-width-back; }
+    Mod+Ctrl+R      { reset-window-height; }
+    Mod+Ctrl+Shift+R { switch-preset-window-height; }
+    Mod+Minus       { set-column-width "-10%"; }
+    Mod+Equal       { set-column-width "+10%"; }
+    Mod+Shift+Minus { set-window-height "-10%"; }
+    Mod+Shift+Equal { set-window-height "+10%"; }
+    Mod+G           { toggle-window-floating; }
+    Mod+Shift+G     { switch-focus-between-floating-and-tiling; }
+    Mod+Shift+Space { toggle-window-floating; }
+    Mod+Y           { toggle-column-tabbed-display; }
+    Mod+BracketLeft  { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    Mod+Comma       { consume-window-into-column; }
+    Mod+Period      { expel-window-from-column; }
+
+    // focus
+    Mod+Left  { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+Up    { focus-window-or-workspace-up; }
+    Mod+Down  { focus-window-or-workspace-down; }
+    Mod+H     { focus-column-left; }
+    Mod+L     { focus-column-right; }
+    Mod+K     { focus-window-or-workspace-up; }
+    Mod+J     { focus-window-or-workspace-down; }
+    Mod+Home  { focus-column-first; }
+    Mod+End   { focus-column-last; }
+
+    // moving things around
+    Mod+Ctrl+Left  { move-column-left; }
+    Mod+Ctrl+Right { move-column-right; }
+    Mod+Ctrl+Up    { move-window-up-or-to-workspace-up; }
+    Mod+Ctrl+Down  { move-window-down-or-to-workspace-down; }
+    Mod+Ctrl+H     { move-column-left; }
+    Mod+Ctrl+L     { move-column-right; }
+    Mod+Ctrl+K     { move-window-up-or-to-workspace-up; }
+    Mod+Ctrl+J     { move-window-down-or-to-workspace-down; }
+    Mod+Ctrl+Home  { move-column-to-first; }
+    Mod+Ctrl+End   { move-column-to-last; }
+
+    // monitors
+    Mod+Shift+Left  { focus-monitor-left; }
+    Mod+Shift+Right { focus-monitor-right; }
+    Mod+Shift+Up    { focus-monitor-up; }
+    Mod+Shift+Down  { focus-monitor-down; }
+    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+    Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
+
+    // workspaces
+    Mod+Page_Down      { focus-workspace-down; }
+    Mod+Page_Up        { focus-workspace-up; }
+    Mod+U              { focus-workspace-down; }
+    Mod+I              { focus-workspace-up; }
+    Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
+    Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
+    Mod+Ctrl+U         { move-column-to-workspace-down; }
+    Mod+Ctrl+I         { move-column-to-workspace-up; }
+    Mod+Shift+Page_Down { move-workspace-down; }
+    Mod+Shift+Page_Up   { move-workspace-up; }
+    Mod+Shift+U         { move-workspace-down; }
+    Mod+Shift+I         { move-workspace-up; }
+
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+Ctrl+1 { move-column-to-workspace 1; }
+    Mod+Ctrl+2 { move-column-to-workspace 2; }
+    Mod+Ctrl+3 { move-column-to-workspace 3; }
+    Mod+Ctrl+4 { move-column-to-workspace 4; }
+    Mod+Ctrl+5 { move-column-to-workspace 5; }
+    Mod+Ctrl+6 { move-column-to-workspace 6; }
+    Mod+Ctrl+7 { move-column-to-workspace 7; }
+    Mod+Ctrl+8 { move-column-to-workspace 8; }
+    Mod+Ctrl+9 { move-column-to-workspace 9; }
+
+    // mouse wheel
+    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
+    Mod+WheelScrollRight     { focus-column-right; }
+    Mod+WheelScrollLeft      { focus-column-left; }
+    Mod+Shift+WheelScrollDown { focus-column-right; }
+    Mod+Shift+WheelScrollUp   { focus-column-left; }
+
+    // ── System ──
+    Mod+Shift+P     { power-off-monitors; }
+    Ctrl+Alt+Delete { quit; }
+    Mod+Shift+Escape allow-inhibiting=false hotkey-overlay-title="Отключить перехват клавиш приложением" { toggle-keyboard-shortcuts-inhibit; }
+}

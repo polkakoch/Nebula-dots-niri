@@ -1,0 +1,195 @@
+/* ┌───────────────────────────────────────────────┐
+ * │  Nebula · waybar — the menu bar                │
+ * │  Palette: colors.css (changes with the theme)  │
+ * │  Bar style: nebula-settings.css                │
+ * └───────────────────────────────────────────────┘ */
+@import "colors.css";
+@import "nebula-settings.css";
+@import "nebula-cover.css";   /* the current track's cover — written by nb-media */
+
+* {
+    font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+}
+
+/* the bar background comes from the style in nebula-settings.css (frame / floating / pills / minimal):
+ * it's not here on purpose — a rule further down this file would override the imported one */
+window#waybar {
+    color: @fg;
+    transition: background 0.3s ease;
+}
+
+tooltip {
+    background: alpha(@bg, 0.96);
+    border: 1px solid alpha(@fg, 0.10);
+    border-radius: 12px;
+}
+tooltip label {
+    color: @fg;
+    padding: 3px 5px;
+    font-weight: 500;
+}
+
+.modules-left  { margin-left: 8px; }
+.modules-right { margin-right: 8px; }
+
+/* ── every item: highlights on hover ── */
+#custom-logo, #workspaces, #window, #custom-media, #tray, #bluetooth, #cpu, #memory,
+#custom-power, #language, #network, #battery, #custom-control, #clock {
+    padding: 0 9px;
+    margin: 4px 0;
+    border-radius: 8px;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+#custom-logo:hover, #custom-media:hover, #language:hover, #network:hover, #bluetooth:hover,
+#cpu:hover, #memory:hover, #custom-power:hover, #battery:hover, #custom-control:hover, #clock:hover {
+    background: alpha(@fg, 0.12);
+}
+
+/* ── logo ────────────────────────────────────────────────── */
+#custom-logo {
+    color: @fg;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 16px;
+    padding: 0 11px 0 9px;
+}
+
+/* ── workspaces: dots, the active one stretches into a capsule ── */
+#workspaces { padding: 0 4px; }
+#workspaces button {
+    min-width: 7px;
+    min-height: 7px;
+    margin: 9px 3px;
+    padding: 0;
+    border-radius: 999px;
+    background: alpha(@fg, 0.30);
+    color: transparent;
+    font-size: 1px;
+    transition: min-width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                background 0.3s ease;
+}
+#workspaces button label {
+    font-size: 1px;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+}
+#workspaces button:hover {
+    background: alpha(@fg, 0.6);
+    box-shadow: none;
+}
+#workspaces button.active {
+    min-width: 22px;
+    background: @fg;
+}
+#workspaces button.urgent { background: @red; }
+#workspaces button.empty:not(.active) { background: alpha(@fg, 0.16); }
+
+/* ── window title ────────────────────────────────────────── */
+#window {
+    color: @fg;
+    font-weight: 600;
+}
+#window image { margin-right: 7px; }
+window#waybar.empty #window { padding: 0; margin: 0; }
+
+/* ── player in the center: cover (background, nebula-cover.css) + title (nb-media) ─── */
+#custom-media {
+    color: @fg_dim;
+    font-weight: 500;
+    background-repeat: no-repeat;
+    background-position: 5px center;
+}
+#custom-media.playing { color: @fg; }
+
+/* ── tray ────────────────────────────────────────────────── */
+#tray > .needs-attention {
+    background: alpha(@red, 0.3);
+    border-radius: 6px;
+}
+
+/* ── volume and brightness pills ────────────────────────────
+ * compact — icon and percent · grow — width grows (text still short) ·
+ * wide — with the bar · shrink — text short again, then the width eases back */
+#custom-volume, #custom-brightness {
+    min-width: 0;
+    margin: 5px 2px;
+    padding: 0 11px;
+    border-radius: 999px;
+    background: alpha(@fg, 0.08);
+    color: @fg;
+    font-size: 12px;
+    transition: min-width 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+                background 0.3s ease,
+                padding 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#custom-volume:hover, #custom-brightness:hover {
+    background: alpha(@fg, 0.14);
+}
+#custom-volume.expanded, #custom-brightness.expanded {
+    min-width: 150px;
+    padding: 0 13px;
+    background: alpha(@accent, 0.20);
+}
+#custom-volume.muted { color: @muted; }
+#custom-volume.hidden, #custom-brightness.hidden {
+    margin: 0;
+    padding: 0;
+}
+
+/* ── language, network, battery ─────────────────────────── */
+#language {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+#network, #bluetooth, #custom-power {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 15px;
+}
+#bluetooth.off, #bluetooth.disabled { color: @muted; }
+#cpu, #memory { font-weight: 600; font-size: 12px; }
+#network.disconnected { color: @muted; }
+#battery.charging, #battery.plugged, #battery.full { color: @green; }
+#battery.warning:not(.charging) { color: @yellow; }
+#battery.critical:not(.charging) {
+    color: @red;
+    animation: blink 1s ease-in-out infinite alternate;
+}
+@keyframes blink {
+    to { color: @fg; background: alpha(@red, 0.45); }
+}
+
+/* ── Control Center and clock ────────────────────────────── */
+#custom-control {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 15px;
+    padding: 0 10px;
+}
+#custom-control.has { color: @accent; }
+#custom-control.dnd { color: @accent2; }
+#clock {
+    font-weight: 600;
+    padding: 0 10px;
+}
+
+/* ── tray menus ──────────────────────────────────────────── */
+menu {
+    background: alpha(@bg, 0.97);
+    border: 1px solid alpha(@fg, 0.10);
+    border-radius: 10px;
+    padding: 5px;
+}
+menu menuitem {
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: @fg;
+}
+menu menuitem:hover {
+    background: @accent;
+    color: @on_accent;
+}

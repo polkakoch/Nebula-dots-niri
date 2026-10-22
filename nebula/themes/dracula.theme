@@ -1,0 +1,19 @@
+# Nebula theme: Dracula
+name="Dracula"
+mode=dark
+bg=#282a36
+bg_alt=#21222c
+surface=#343746
+overlay=#44475a
+fg=#f8f8f2
+fg_dim=#e2e2dc
+muted=#6272a4
+accent=#bd93f9
+accent2=#ff79c6
+red=#ff5555
+green=#50fa7b
+yellow=#f1fa8c
+blue=#82aaff
+magenta=#ff79c6
+cyan=#8be9fd
+orange=#ffb86c

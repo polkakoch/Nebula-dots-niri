@@ -1,0 +1,19 @@
+# Nebula theme: Horizon
+name="Horizon"
+mode=dark
+bg=#1c1e26
+bg_alt=#16161c
+surface=#232530
+overlay=#2e303e
+fg=#d5d8da
+fg_dim=#bbbbbb
+muted=#6c6f93
+accent=#e95678
+accent2=#fab795
+red=#e95678
+green=#29d398
+yellow=#fab795
+blue=#26bbd9
+magenta=#ee64ac
+cyan=#59e3e3
+orange=#f09383

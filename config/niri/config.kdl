@@ -1,0 +1,22 @@
+//  ███╗   ██╗███████╗██████╗ ██╗   ██╗██╗      █████╗
+//  ████╗  ██║██╔════╝██╔══██╗██║   ██║██║     ██╔══██╗
+//  ██╔██╗ ██║█████╗  ██████╔╝██║   ██║██║     ███████║
+//  ██║╚██╗██║██╔══╝  ██╔══██╗██║   ██║██║     ██╔══██║
+//  ██║ ╚████║███████╗██████╔╝╚██████╔╝███████╗██║  ██║
+//  ╚═╝  ╚═══╝╚══════╝╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝   for niri
+//
+//  niri docs: https://niri-wm.github.io/niri/
+//  Keyboard cheat sheet: Super+Shift+/
+//
+//  Put your own tweaks in conf.d/user.kdl — the installer leaves it alone.
+
+include "conf.d/input.kdl"
+include "conf.d/outputs.kdl"
+include "conf.d/layout.kdl"
+include "colors.kdl"            // colors of the current theme (nb-theme)
+include "conf.d/rules.kdl"
+include "conf.d/animations.kdl"
+include "nebula-settings.kdl"   // windows, animations, bar — changed from the side panel (nb-settings)
+include "conf.d/startup.kdl"
+include "conf.d/binds.kdl"
+include "conf.d/user.kdl"
