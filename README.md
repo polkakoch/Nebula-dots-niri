@@ -13,15 +13,15 @@ switch any time.
 
 Arch Linux or an Arch-based distro, niri 26 or newer.
 
-**From git** (replace `USER` with your account):
+**From git**:
 
 ```sh
-git clone https://github.com/USER/nebula.git
-cd nebula
+git clone https://github.com/polkakoch/Nebula-dots-niri.git
+cd Nebula-dots-niri
 ./install.sh
 ```
 
-**From a release**: grab `nebula-<version>.zip` from the Releases page, then:
+**From a release**: grab `nebula-<version>.zip` from the [Releases](https://github.com/polkakoch/Nebula-dots-niri/releases) page, then:
 
 ```sh
 unzip nebula-*.zip && cd nebula-*/ && ./install.sh

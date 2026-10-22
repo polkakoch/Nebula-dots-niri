@@ -12,15 +12,15 @@
 
 Arch Linux или дистрибутив на его основе, niri 26 или новее.
 
-**Из git** (замените `USER` на свой аккаунт):
+**Из git**:
 
 ```sh
-git clone https://github.com/USER/nebula.git
-cd nebula
+git clone https://github.com/polkakoch/Nebula-dots-niri.git
+cd Nebula-dots-niri
 ./install.sh
 ```
 
-**Из релиза**: скачайте `nebula-<версия>.zip` со страницы Releases, затем:
+**Из релиза**: скачайте `nebula-<версия>.zip` со страницы [Releases](https://github.com/polkakoch/Nebula-dots-niri/releases), затем:
 
 ```sh
 unzip nebula-*.zip && cd nebula-*/ && ./install.sh
